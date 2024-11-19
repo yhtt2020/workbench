@@ -36,6 +36,7 @@ class ActionHandler {
         actionCommander = new CmdAction(action)
         break
     }
+    console.log('初始化了',action)
     return await actionCommander.doAction()
   }
 }

@@ -46,10 +46,10 @@
 <!--    </a-tab-pane>-->
 
   </a-tabs>
-  <div style="text-align: center">
-    <a-button @click="addAction" type="primary">确认</a-button>
+  <div class="flex gap-2 w-full mt-4 " style="justify-content: center">
+    <xt-button size="sm" @click="addAction" type="theme">确认</xt-button>
 
-    <a-button @click="back">取消</a-button>
+    <xt-button size="sm" @click="back">取消</xt-button>
   </div>
   <div>
 

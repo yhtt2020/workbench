@@ -1,7 +1,7 @@
 {
   "name": "render",
   "private": true,
-  "version": "11.7.6",
+  "version": "11.8.0",
   "scripts": {
     "dev": "vite",
     "start": "node ./script/dev",
@@ -28,7 +28,7 @@
     "animate.css": "^4.1.1",
     "ant-design-vue": "3.2.20",
     "axios": "^1.6.1",
-    "cheerio": "^1.0.0-rc.12",
+    "cheerio": "^1.0.0",
     "codemirror": "5.65.13",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.11.9",
@@ -68,7 +68,7 @@
     "tinycolor2": "^1.6.0",
     "tui-image-editor": "^3.15.3",
     "unplugin-vue-components": "^0.20.1",
-    "v-calendar": "^3.0.3",
+    "v-calendar": "3.1.2",
     "v-viewer": "^3.0.11",
     "vditor": "^3.9.6",
     "viewerjs": "^1.11.6",

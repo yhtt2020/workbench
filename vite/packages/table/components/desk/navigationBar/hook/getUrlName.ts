@@ -1,6 +1,6 @@
 // 获取网站图标
 import axios from "axios";
-import cheerio from "cheerio";
+import * as cheerio from 'cheerio';
 import $ from "jquery";
 
 /**

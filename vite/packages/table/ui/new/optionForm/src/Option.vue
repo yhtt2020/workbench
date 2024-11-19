@@ -22,7 +22,17 @@
       v-model="data[option.tabKey]"
     />
   </template>
-
+  <template v-else-if="option.type === 'setAction'">
+    <div @click="showEditAction(data,index)" :style="{'border-left-color':data.group.color}"
+           v-for="(data,index) in data[option.actionKey]" class="action">
+        {{ data.action.title }}
+      <span v-if="data.action.name==='sendKeys'">
+        {{data.action.data.keys.keyStr}}
+      </span>
+        <Icon class="close-btn" @click.stop="removeAction(index)" style="font-size: 15px" icon="guanbi1"></Icon>
+    </div>
+    <xt-button class="mb-2" size="sm" type="theme" @click="showEditAction">添加行为</xt-button>
+  </template>
   <!-- 属于颜色选项 -->
   <xt-option-color
     v-bind="option"
@@ -58,11 +68,26 @@
   <!-- 自定义插槽 -->
   <slot v-else-if="option.type === 'slot'" :name="option.slot"> </slot>
   <div v-if="option?.border" class="tt-divider"></div>
+  <xt-modal
+    v-if="editActionVisible"
+    v-model="editActionVisible"
+    title="选择指令"
+    @close="editActionVisible = false"
+  >
+  <div style="width: 800px;height: 600px">
+    <DeckAction :data="editAction" ref="_deckAction" @click="doAddAction"></DeckAction>
+  </div>
+
+  </xt-modal>
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent } from 'vue'
-
+import { defineAsyncComponent,ref } from 'vue'
+import DeckAction from '../../../../apps/deck/DeckAction.vue'
+const editingAction=ref({})
+const editActionVisible=ref(false)
+const editActionIndex=ref(-1)
+const editAction=ref({})
 // 下拉框选择 -- 打开模式选择（包含手机模式）
 const dropDown = defineAsyncComponent(
   () => import('../../../../../table/components/desk/navigationBar/components/dropDown/DropDown.vue'));
@@ -78,7 +103,27 @@ const lineSpace = 12;
 const lineSpaceStyle = {
   "margin-bottom": lineSpace + "px",
 };
+const showEditAction=(data,index=-1)=>{
+  editAction.value=data
+  editActionIndex.value=index
+  editActionVisible.value=true
+}
+const doAddAction=(data)=>{
+  editActionVisible.value=false
+  if(!data){
+    return
+  }
+  if(editActionIndex.value>-1){
+    //编辑场景
+    props.data[props.option.actionKey][editActionIndex.value]=data
+  }else{
+    props.data[props.option.actionKey].push(data)
+  }
 
+}
+const removeAction=(index)=>{
+  props.data[props.option.actionKey].splice(index,1)
+}
 const test = () => {
   // emits(option.iconCb);
 };

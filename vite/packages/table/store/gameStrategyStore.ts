@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import dbStorage from "./dbStorage";
 import axios from "axios";
-import cheerio from "cheerio";
+import * as cheerio from 'cheerio';
 import { fixHttp } from "../util";
 
 //@ts-ignore

@@ -14,6 +14,8 @@ import { storeToRefs } from "pinia";
 import fs from "fs";
 import { appsStore } from "../../store/apps";
 import { useAppCenterStore } from "../../apps/appCenter/src/store";
+import {ActionHandler} from "../../js/action/actionHandler";
+import {message} from "ant-design-vue";
 
 // @ts-ignore
 
@@ -191,6 +193,58 @@ export const startApp = async (type, value, router?) => {
     case "card":
       // useMit.emit("openCard");
       break;
+    case 'action':
+      console.log('执行actions',value)
+      let done = []
+      let success = []
+      let failure = []
+      let unknown = []
+      let actions =value
+      if (actions) {
+        for (const action of actions) {
+          let handler = new ActionHandler(action)
+          let result = await handler.doAction()
+          done.push(result)
+          if (result.status === 1) {
+            success.push(result)
+          } else if (result.status === 0) {
+            failure.push(result)
+          } else {
+            unknown.push(result)
+          }
+        }
+        if (failure.length === 0) {
+          if (unknown.length) {
+            console.log('333 :>> ', 333);
+            message.success({
+              content: `共为您执行${done.length}个动作，成功${success.length}个，未知${unknown.length}个`,
+              key: 'action'
+            })
+          } else {
+            message.success({content: `共为您成功执行${done.length}个动作`, key: 'action'})
+          }
+
+        } else {
+          if (success.length > 0) {
+            message.warn({
+              content: `共为您执行${done.length}个动作，其中失败${failure.length}个，成功${success.length}，未知${unknown.length}个`,
+              key: 'action'
+            })
+          } else {
+            message.error({
+              content: `共为您执行${done.length}个动作，其中失败${failure.length}个，成功${success.length}，未知${unknown.length}个`,
+              key: 'action'
+            })
+          }
+        }
+        if (failure.length > 0) {
+          console.warn({content: '打印失败日志：', key: 'action'})
+          failure.forEach(f => {
+            console.warn(f.message)
+          })
+        }
+      } else {
+      }
   }
   return true;
 };

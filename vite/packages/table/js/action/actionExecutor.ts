@@ -1,3 +1,4 @@
+import * as shortcutTools from '../../apps/shortcutKey/shortcutTools'
 
 class ActionExecutor {
   action: IDeckAction
@@ -8,7 +9,7 @@ class ActionExecutor {
     this.args = action.args
   }
 
-  doAction():ActionResult {
+  doAction(): ActionResult {
 
   }
 }

@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
 import {compareTime, cacheRequest, quickRequest} from '../js/axios/api'
-import cheerio from 'cheerio';
+import * as cheerio from 'cheerio';
 import {serverCache} from "../js/axios/serverCache";
 import axios from "axios";
 

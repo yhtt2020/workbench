@@ -1,15 +1,16 @@
 <template>
   <xt-modal style="width:500px"
-    v-model="visible"
-    v-if="visible"
-    :footer="0"
-    @close="close"
-    :index="index"
-    :maskIndex="maskIndex"
+            v-model="visible"
+            v-if="visible"
+            :footer="0"
+            @close="close"
+            :index="index"
+            :maskIndex="maskIndex"
   >
     <template #header-right>
       <xt-button @click="save" w="60" h="32" radius="8" type="theme"
-        >保存</xt-button
+      >保存
+      </xt-button
       >
     </template>
 
@@ -21,13 +22,16 @@
         class="p-1 xt-bg-t-2"
         :boxStyle="{ 'border-radius': '10px' }"
         :itemStyle="{ 'border-radius': '6px' }"
-    /></template>
+      />
+    </template>
     <div style="height: 50vh">
       <div style="width: 452px" v-if="currentTab == 'attribute'">
-        <xt-option-box v-if="edit.open.type == 'systemApp'">
-          <xt-text class="mb-3" center> 当前图标为「系统功能」类型。 </xt-text>
+        <!--   系统类的app则不允许修改      -->
+        <xt-option-box v-if="['systemApp','lightApp','coolApp'].includes(edit.open.type) ">
+          <xt-text class="mb-3" center> 当前图标为「系统功能」类型。</xt-text>
         </xt-option-box>
         <template v-else>
+          <!--    图标、app、快捷指令走这里       -->
           <xt-option-form :options="attributeOptions" :data="edit">
             <template #custom>
               <div @click="openLocalApp()">
@@ -38,10 +42,11 @@
                 />
               </div>
               <div v-show="!edit.value">
-                <LocalApp ref="localApp"  @onLocalApp="updateApp" />
+                <LocalApp ref="localApp" @onLocalApp="updateApp"/>
               </div>
             </template>
             <template #mode>
+              <!--此处为自定义表单部分              -->
               <xt-option-tab
                 v-model="mode"
                 :list="modeList"
@@ -54,7 +59,7 @@
       </div>
       <div v-else style="width: 452px">
         <div @click="showUpload" class="flex justify-center mb-3" style="zoom: 0.8">
-          <Icon @onEdit="showUpload"  v-bind="edit" :edit="true"></Icon>
+          <Icon @onEdit="showUpload" v-bind="edit" :edit="true"></Icon>
         </div>
         <div class="p-4 mb-4 xt-bg-2 rounded-xl">
           <xt-option-info
@@ -64,22 +69,22 @@
             @onIconClick="refreshIcon"
           />
           <xt-option-icon ref="iconRef"
-            v-model:icon="edit.src"
-            v-model:input="edit.titleValue"
+                          v-model:icon="edit.src"
+                          v-model:input="edit.titleValue"
           />
         </div>
         <!-- systemApp -->
-        <Form :options="appearanceNameOptions" :data="edit" />
-        <Form :options="appearanceOptions" :data="edit" />
-        <Form :options="appearanceColorOptions" :data="edit" />
+        <Form :options="appearanceNameOptions" :data="edit"/>
+        <Form :options="appearanceOptions" :data="edit"/>
+        <Form :options="appearanceColorOptions" :data="edit"/>
       </div>
     </div>
   </xt-modal>
 </template>
 
 <script setup>
-import { storeToRefs } from "pinia";
-import { message } from "ant-design-vue";
+import {storeToRefs} from "pinia";
+import {message} from "ant-design-vue";
 
 import {
   ref,
@@ -90,7 +95,7 @@ import {
   getCurrentInstance,
   defineAsyncComponent,
 } from "vue";
-import { myIcons } from "../../../../store/myIcons";
+import {myIcons} from "../../../../store/myIcons";
 import Icon from "../components/icon.vue";
 import LocalApp from "./LocalApp.vue";
 import {
@@ -99,15 +104,15 @@ import {
   appearanceOptions,
   appearanceColorOptions,
 } from "./options";
-import { getHostAddress } from "../edit/hooks/getHostAddress";
+import {getHostAddress} from "../edit/hooks/getHostAddress";
 
 // 手动引入通用表单组件
 const Form = defineAsyncComponent(() =>
   import("../../../../ui/new/optionForm/src/Form.vue")
 );
-const iconRef=ref()
-const { proxy } = getCurrentInstance();
-const showUpload=()=>{
+const iconRef = ref()
+const {proxy} = getCurrentInstance();
+const showUpload = () => {
   iconRef.value.showUpload()
 }
 const modeList = computed(() => {
@@ -122,11 +127,15 @@ const modeList = computed(() => {
       name: "系统程序或文件",
       value: "app",
     });
+    res.push({
+      name: "快捷指令",
+      value: "action",
+    });
   }
   return res;
 });
 const iconStore = myIcons();
-const { edit } = storeToRefs(iconStore);
+const {edit} = storeToRefs(iconStore);
 const emits = defineEmits(["close", "update:modelValue", "save"]);
 const props = defineProps({
   modelValue: {},
@@ -138,20 +147,22 @@ const props = defineProps({
   },
 });
 const arr = ["internal", "default", "thinksky", "mob"];
-const res = arr.includes(edit.value.open.type);
-edit.value.type = edit.value.open.type;
 
-edit.value["mode"] = res ? "link" : "app";
-edit.value["value"] = edit.value.open.value;
-if (!edit.value["defaultIcon"]) {
-  edit.value["defaultIcon"] = edit.value.src;
-}
-console.log(edit.value["mode"]);
 
-{
-}
-
-onMounted(() => {});
+onMounted(() => {
+  edit.value.type = edit.value.open.type;
+  let tabMap = {
+    'tableApp': 'app',
+    'default': 'link'
+  }
+  edit.value["mode"] = tabMap[edit.value.open.type] || edit.value.open.type;
+  mode.value = edit.value['mode'] || 'link'
+  edit.value["value"] = edit.value.open.value;
+  if (!edit.value["defaultIcon"]) {
+    edit.value["defaultIcon"] = edit.value.src;
+  }
+  console.log('读取到当前的eidt', edit.value)
+});
 /**
  * 控制弹窗显示
  */
@@ -197,6 +208,7 @@ const mode = ref(edit.value.mode);
 watch(
   () => mode.value,
   (newVal, oldVal) => {
+    if (!oldVal) return
     console.log("newVal,oldVal :>> ", newVal, oldVal);
     window.$ui.confirm("是否切换模式", "切换模式将清空数据，是否继续？", {
       okText: "切换",
@@ -204,13 +216,22 @@ watch(
       ok: () => {
         edit.value.value = "";
         if (newVal == "link") {
-          edit.value.type = "default";
           edit.value.mode = "link";
+          edit.value.open.type = 'link'
+          edit.value.type = "default";
         }
         if (newVal === "app") {
           edit.value.mode = "app";
+          edit.value.open.type = 'app'
           edit.value.src =
             "https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn";
+        }
+        if (newVal === "action") {
+          edit.value.mode = "action";
+          edit.value.open.type = "action";
+          edit.value.open.value = 'action'
+          edit.value.type = 'action'
+          edit.value.actions = []
         }
       },
       no: () => {
@@ -220,8 +241,9 @@ watch(
       type: "warning",
     });
   }
-),
-  onBeforeUnmount(() => {});
+)
+onBeforeUnmount(() => {
+});
 
 // 监听图标路径
 watch(

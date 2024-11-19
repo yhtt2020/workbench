@@ -440,7 +440,7 @@ export const cardStore = defineStore(
         let card=desk.cards[index]
 
         if(card){
-          card={...card}
+          card=JSON.parse(JSON.stringify(card))
         }
         card.id=nanoid(6)
         card.key=card.id

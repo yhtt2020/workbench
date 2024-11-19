@@ -639,7 +639,9 @@ export default {
     },
     // 适配新版保存图标
     closeSet() {
-      console.log("22222 :>> ", this.edit);
+      if(this.edit.type=='action'){
+        this.edit.value=[...this.edit.actions]
+      }
       this.customData.iconList[this.index] = {
         ...this.edit,
         open: {
@@ -648,11 +650,6 @@ export default {
         },
       };
       this.customData.customSize = sizeTransform[this.edit.size];
-      console.log(this.customData.customSize, "<<<<<<<<");
-      console.log(
-        "      this.customData.iconList[this.index] :>> ",
-        this.customData.iconList[this.index]
-      );
       this.settingVisible = false;
     },
   },

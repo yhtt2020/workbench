@@ -57,7 +57,7 @@ let ActionGroups = [
           rules: [{required: true, message: '必须填写快捷键'}],
           name: 'keys',
           title: '名称',
-          type: 'input',
+          type: 'keyInput',
           width: '26em',
           placeholder: '请输入快捷键'
         }]
