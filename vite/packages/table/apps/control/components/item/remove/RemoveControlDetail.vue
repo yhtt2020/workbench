@@ -51,6 +51,27 @@
     </div>
   </template>
 
+  <template v-else-if="controlIndex === 'window-size-position'">
+    <div
+      class="rounded-xl pointer category-button xt-bg-t-2 flex items-center justify-center flex-col"
+      style="height: 120px; width: 252px"
+      :class="isClick ? 'pointer-events-auto' : 'pointer-events-none'"
+      @click="removeControlItem">
+      <Screen />
+      
+      <div class="absolute" style="top: 7px; right: -4px">
+        <xt-button style="width: auto !important" h="0">
+          <div class="flex items-center justify-center">
+            <xt-ify-icon
+              icon="fluent:subtract-circle-16-filled"
+              size="20"
+              style="color: var(--error)"
+            />
+          </div>
+        </xt-button>
+      </div>
+    </div>
+  </template>
   <!-- 其他 -->
   <template v-else>
     <div
@@ -92,6 +113,7 @@ import _ from "lodash-es";
 import SystemAudio from "../system/SystemAudio.vue";
 import UserControl from "../user/UserControl.vue";
 import UserUnLogin from "../user/UserUnLogin.vue";
+import Screen from "../screen/screen.vue";
 
 const app = appStore();
 const { userInfo } = storeToRefs(app);

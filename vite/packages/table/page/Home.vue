@@ -41,6 +41,10 @@
       :deskId="deskId"
       @changeDesk="changeDesk"
     ></NewGuidePage>
+    <!-- 桌面设置提示 -->
+    <ScreenTip v-if="screenTip"></ScreenTip>
+    <AddScreen v-if="addScreen"></AddScreen>
+    <RenameScreen v-if="renameScreen"></RenameScreen>
     <!-- 右上方的缩放推荐 -->
     <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
     <!-- 仅限于web的登录提示弹窗 -->
@@ -82,6 +86,7 @@ import WebLogin from "./WebLogin.vue";
 import CommunityGroupDesk from "../apps/communityDesk/page/CommunityGroupDesk.vue";
 
 import { taskStore } from "../apps/task/store";
+import { screenStore } from "../store/screen";
 import navigationData from "../js/data/tableData";
 import { navStore } from "../store/nav";
 import { homeStore } from "../store/home";
@@ -97,6 +102,9 @@ import { useUpdateUserInfo } from "../permission/user/useUserPermit";
 import cache from "../components/card/hooks/cache";
 // import { communityDeskStore } from "../apps/communityDesk/store/communityDeskStore";
 import { communityNavStore } from "../components/bottomPanel/store/communityNavStore";
+import ScreenTip from "./app/screen/screenTip.vue";
+import AddScreen from "./app/screen/addScreen.vue";
+import RenameScreen from "./app/screen/renameScreem.vue";
 
 import { isMain } from "../js/common/screenUtils";
 // 检查当前网络状态
@@ -196,6 +204,9 @@ export default {
     GuidePanel,
     WebLogin,
     CommunityGroupDesk,
+    ScreenTip,
+    AddScreen,
+    RenameScreen,
   },
   computed: {
     ...mapWritableState(navStore, [
@@ -261,6 +272,7 @@ export default {
       "currentEnv",
     ]),
     ...mapWritableState(communityNavStore, ["currentCommunity"]),
+    ...mapWritableState(screenStore, ["screenTip", "addScreen", "renameScreen"]),
 
     deskGroupRef() {
       return this.$refs.deskGroupRef;

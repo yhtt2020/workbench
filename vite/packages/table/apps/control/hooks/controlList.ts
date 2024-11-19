@@ -47,6 +47,9 @@ export const useControlList = [
     id: "shake",
     name: "摇一摇",
   },
+  {
+    id: "window-size-position",
+  },
   // {
   //   icon: "fluent:games-16-regular",
   //   id: "game-mode",

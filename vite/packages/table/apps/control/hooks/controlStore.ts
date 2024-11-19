@@ -41,6 +41,14 @@ export const controlStore = defineStore("control", {
       if (this.currentControlList.length === 0) {
         this.currentControlList = useControlList;
       }
+      if(!this.currentControlList.some(u=>u.id == "window-size-position") && !this.currentAdd.some(u=>u.id == "window-size-position")){
+        this.currentControlList.push(
+          {
+            id: "window-size-position",
+          }
+        )
+      }
+
     },
     // 更新列表
     updateControlList(list: any) {
