@@ -94,7 +94,7 @@ export default defineComponent({
         v-if="independentBg.mode === 'video' && independentBg.imgValue !== ''"
         class="fullscreen-video"
         playsinline=""
-        autoplay=""
+        autoplay="true"
         muted=""
         loop=""
         ref="backgroundVideo"
