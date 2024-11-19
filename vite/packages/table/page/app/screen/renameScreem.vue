@@ -7,7 +7,7 @@
           <div class="name">名称</div>
           <div class="box">
             <a-input
-              class="h-8 xt-mask xt-text"
+              class="h-10 xt-mask xt-text"
               style="
                 margin-top: 12px;
                 background: #191919;
