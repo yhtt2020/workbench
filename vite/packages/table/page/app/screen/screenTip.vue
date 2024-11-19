@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed overflow-hidden modal-center xt-modal tran" style="">
+  <div class="fixed overflow-hidden modal-center xt-modal tran" style="z-index: 999999;">
     <div class="title">
       <MyIcon icon="fluent-emoji-flat:desktop-computer" width="24" height="24" />
       <span>检测到工作台所在屏幕发生变化</span>
