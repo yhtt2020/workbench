@@ -89,8 +89,15 @@ export const screenStore = defineStore('screen', {
       subIPC.on('restore',()=>{
         window.restore()
       })
+      subIPC.on('restorePos',()=>{
+        tsbApi.window.setBounds({
+          x:0,
+          y:0,
+          width:1000,
+          height:800
+        })
+      })
       subIPC.on('setScreen',(event,args)=>{
-        console.log(args)
         appStore().exitFullScreen(false)
         tsbApi.window.setBounds({
           x:args.bounds.x,
@@ -231,7 +238,7 @@ export const screenStore = defineStore('screen', {
     enabled: true,
     strategies: [{
       storage: dbStorage,
-      paths: ['screenList']
+      paths: ['screenList','screens']
     }]
   }
 

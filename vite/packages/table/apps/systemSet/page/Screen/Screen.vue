@@ -39,6 +39,7 @@
   <xt-option-box v-if="currentScreen.key !== 'main'" :key="currentKey">
     <xt-option-info
       title="运行"
+      @change="toggleScreen"
       isSwitch
       v-model:switch="currentScreen.running"
     />
@@ -53,7 +54,16 @@
       <xt-option-info title="名称" />
       <xt-option-input @cb="setTitle" @enter="setTitle" v-model:input="newTitle" />
       <hr />
-      <div class="flex justify-between mb-3">
+      <div class="flex justify-between mb-3 gap-2">
+        <xt-button
+          @click="restorePos"
+          h="40"
+          class="xt-modal"
+          iconSize="20"
+          icon="fluent:arrow-clockwise-16-regular"
+        >
+          <div class="ml-1">还原位置</div></xt-button
+        >
         <xt-button
           @click="restore"
           h="40"
@@ -79,7 +89,7 @@
           icon="fluent:add-16-regular"
           class="xt-modal"
         >
-          <div class="ml-1" style="color: #ff4d4f">删除屏幕</div></xt-button
+          <div class="ml-1" style="color: #ff4d4f">删除</div></xt-button
         >
       </div>
     </template>
@@ -129,6 +139,9 @@ export default {
   components: { ChooseScreen, EditOutlined },
   computed: {
     ...mapWritableState(screenStore, ["screens"]),
+    setting(){
+      return JSON.stringify(this.currentScreen)
+    }
   },
 
   mounted() {
@@ -140,8 +153,24 @@ export default {
     this.screens.map((s) => {
       if (s.active) {
         this.currentScreen = s;
+        this.currentKey=s.key
       }
     });
+    this.newTitle=this.currentScreen.title
+  },
+  watch:{
+    'setting':{
+      handler(newVal,oldVal){
+        let newObj=JSON.parse(newVal)
+        let oldObj=JSON.parse(oldVal)
+        if(newObj.key===newObj.key&& oldObj.key!=='main'){
+            if(newObj.running!==oldObj.running){
+              this.toggleScreen(newObj.running)
+            }
+        }
+      },
+      deep:true
+    },
   },
   methods: {
     ...mapActions(screenStore, [
@@ -155,6 +184,10 @@ export default {
       this.select(s.key);
     },
     toggleScreen(checked) {
+      console.log('切换启动',checked)
+      if(this.currentScreen.key==='main'){
+        return
+      }
       if (checked) {
         this.startupScreen(this.currentScreen.key);
       } else {
@@ -180,6 +213,9 @@ export default {
       if (screen.key !== "main") this.startupScreen(screen.key);
 
     },
+    restorePos(){
+      mainIPC.sendToSub(this.currentScreen.key,'restorePos')
+    },
     restore() {
       mainIPC.sendToSub(this.currentScreen.key, "restore");
     },
@@ -187,8 +223,6 @@ export default {
       this.chooseScreenVisible = true;
     },
     setSubBounds(data) {
-      console.log("点击触发");
-      console.log(data);
       let bounds = data.display.bounds;
       let width = bounds.width > 1200 ? 1200 : bounds.width;
       let height = bounds.height > 800 ? 800 : bounds.height;
@@ -232,7 +266,6 @@ export default {
       );
     },
     click(screen) {
-      console.log('screen :>> ', screen);
       this.currentKey = screen.key
       this.currentScreen = screen;
       this.newTitle = screen.title;
