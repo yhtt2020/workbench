@@ -61,11 +61,14 @@
       <template v-if="myOtherGameList?.length !== 0">
         <div class="my-game-container">
           <template
-            v-for="(item, index) in myOtherGameList?.slice(0, 4)"
+            v-for="(item, index) in myOtherGameList?.slice(0, 6)"
             :key="index"
           >
-            <div class="flex flex-col xt-bg-t-2 rounded-t-lg pointer">
-              <span class="w-full px-3 py-3 truncate" style="max-width: 207px">
+            <div @click="openGame(item)" class="flex flex-col xt-bg-t-2 rounded-lg pointer item-content ">
+              <div class="pt-3 item-content">
+                <a-avatar :radius="12" shape="square" :size="50" :src="item.icon"></a-avatar>
+              </div>
+              <span class="w-full px-3 py-3 truncate text-center" >
                 {{ item?.name }}
               </span>
             </div>
@@ -92,7 +95,7 @@
               padding-left: 16px;
               padding-right: 16px;
             "
-            @click="importOutsideGame"
+            @click="openLocal"
           >
             导入外部游戏
           </xt-button>
@@ -107,13 +110,14 @@
 </template>
 
 <script setup>
-import { ref, toRefs, onUnmounted,watch } from "vue";
+import {ref, toRefs, onUnmounted, watch, defineEmits} from "vue";
 import { storeToRefs } from "pinia";
 import { steamUserStore } from "../../../../store/steamUser";
 import { gameDetailStore } from "../store/gameDetailStore";
 import { useRouter } from "vue-router";
 
 import MyGameLargeDetail from "./MyGameLargeDetail.vue";
+import {message} from "ant-design-vue";
 
 const props = defineProps({
   // 游戏分类
@@ -131,6 +135,10 @@ const props = defineProps({
     default: () => [],
   },
 });
+const emits=defineEmits(['import'])
+const openLocal=()=>{
+  emits('import')
+}
 const { gameClass, mySteamGameList, myOtherGameList } = toRefs(props);
 
 // 解构store数据
@@ -150,8 +158,11 @@ const enterMyGame = () => {
   router.push({ name: "myGame" });
 };
 
+const openGame=(item)=>{
+  message.success('正在启动游戏 '+item.name)
+  require("electron").shell.openPath(item.path);
+}
 // 导入外部游戏
-const importOutsideGame = () => {};
 
 </script>
 

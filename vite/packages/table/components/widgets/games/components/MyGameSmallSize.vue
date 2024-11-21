@@ -27,6 +27,7 @@
             </div>
           </template>
         </template>
+        <!-- 其他游戏 -->
 
         <template v-else>
           <div class="flex items-center justify-center flex-col h-full">
@@ -55,9 +56,52 @@
         </template>
       </div>
     </template>
+    <template v-else-if="gameClass === 'other'">
+      <template v-if="myOtherGameList?.length !== 0">
+        <div class="my-game-container">
+          <template
+            v-for="(item, index) in myOtherGameList?.slice(0, 3)"
+            :key="index"
+          >
+            <div @click="openGame(item)" class="flex flex-col mb-3 xt-bg-t-2 rounded-lg pointer item-content ">
+              <div class="pt-3 item-content">
+                <a-avatar :radius="12" shape="square" :size="55" :src="item.icon"></a-avatar>
+              </div>
+              <span class="w-full px-3 py-3 truncate text-center" >
+                {{ item?.name }}
+              </span>
+            </div>
+          </template>
+        </div>
+      </template>
 
-    <!-- 其他游戏 -->
-    <template v-else-if="gameClass === 'other'"></template>
+      <template v-else>
+        <div class="flex items-center justify-center flex-col h-full">
+          <div class="flex items-center justify-center flex-col mb-4">
+            <xt-ify-icon
+              icon="fluent-emoji:magnifying-glass-tilted-right"
+              class="mb-4"
+              size="64"
+            />
+            <span class="xt-text-2 xt-font font-14">没有找到相关内容</span>
+          </div>
+          <xt-button
+            :radius="8"
+            type="theme"
+            h="40"
+            style="
+              width: auto !important;
+              padding-left: 16px;
+              padding-right: 16px;
+            "
+            @click="openLocal"
+          >
+            导入外部游戏
+          </xt-button>
+        </div>
+      </template>
+    </template>
+
   </template>
 
   <!-- 游戏详情 -->
@@ -67,20 +111,24 @@
 </template>
 
 <script setup>
-import { ref, toRefs } from "vue";
+import { ref, toRefs ,defineEmits} from "vue";
 import { storeToRefs } from "pinia";
 import { steamUserStore } from "../../../../store/steamUser";
 import { gameDetailStore } from "../store/gameDetailStore";
 import { useRouter } from "vue-router";
 
 import MyGameSmallDetail from "./MyGameSmallDetail.vue";
+import {message} from "ant-design-vue";
 
 const router = useRouter();
 
 // 解构store数据
 const { smallDetailVisible } = storeToRefs(steamUserStore());
 const { smallGameDetail } = storeToRefs(gameDetailStore());
-
+const emits=defineEmits(['import'])
+const openLocal=()=>{
+  emits('import')
+}
 const props = defineProps({
   // 区分游戏类型是steam还是other
   gameClass: {
@@ -88,9 +136,16 @@ const props = defineProps({
   },
   // 我的steam游戏列表
   mySteamGameList: {},
+  myOtherGameList: {
+    type: Array,
+    default: () => [],
+  },
 });
 const { gameClass } = toRefs(props);
-
+const openGame=(item)=>{
+  message.success('正在启动游戏 '+item.name)
+  require("electron").shell.openPath(item.path);
+}
 
 const mySmallDetail = ref({})
 

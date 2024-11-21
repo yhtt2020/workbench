@@ -57,6 +57,9 @@
         class="pt-3 mr-3"
         @scroll="scrollList($event)"
       >
+        <div v-if="gameType.name === 'other' &&  localGameList.length ===0">
+          请导入本地游戏
+        </div>
         <div
           class="flex flex-row flex-wrap -ml-3"
           v-if="gameType.name === 'other' && localGameList.length > 0"
@@ -535,7 +538,7 @@ export default {
     }),
     displayGameList() {
       return this.localGameList.filter((game) => {
-        return isHide("local", game.id);
+        return !isHide("local", game.id);
       });
     },
     displaySteamGameList() {
@@ -597,15 +600,18 @@ export default {
     async openLocal() {
       let openPath = await tsbApi.dialog.showOpenDialog({
         title: "选择导入的代码",
-        filters: [{ name: "全部", extensions: ["*"] }],
+        filters: [{ name: "程序或者快捷方式", extensions: ["exe","url"] },{ name: "全部", extensions: ["*"] }],
         properties: ["multiSelections"],
       });
+      console.log(openPath,'open')
       if (!openPath) {
+        console.log('no openpath')
         return;
       }
       let dropFiles = await ipc.sendSync("getFilesIcon", {
         files: JSON.parse(JSON.stringify(openPath)),
       });
+      console.log(dropFiles,'rop')
       this.modalVisibility = false;
       dropFiles.forEach((game) => {
         this.localGameList.unshift(game);
