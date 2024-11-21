@@ -2,12 +2,15 @@
   <div class="flex items-center w-full h-full">
     <div class="tab-list">
       
-      <div class="tab select" :style="{marginLeft: index>0?'8px':0}" v-for="(item, index) in screenList"
+      <div class="tab select relative" :style="{marginLeft: index>0?'8px':0}" v-for="(item, index) in screenList"
       :key="index">
         <xt-mix-menu :menus="menuList" @mounted="currentIndex = index" :beforeCreateFn="beforeCreateFn">
           <div class="flex items-center h-full" @click="setScreen(item)" style="flex-direction: column;">
             <MyIcon icon="fluent:desktop-16-regular" width="24" height="24" color="rgba(255,255,255,0.85)" style="margin-top: 22px" />
             <span>{{ item.title }}</span>
+            <div class="mask h-full w-full absolute"></div>
+            <div class="change absolute" @click="setScreen(item)">读取</div>
+            <div class="save absolute" @click="saveScreen(index)">写入</div>
           </div>
         </xt-mix-menu>
       </div>
@@ -40,7 +43,7 @@ export default {
     },
   },
   computed: {
-    ...mapWritableState(screenStore, ["screenTip", 'screenList', 'addScreen', 'renameScreen', 'renameIndex']),
+    ...mapWritableState(screenStore, ["screenTip", 'screenList', 'renameScreen', 'renameIndex', 'currentScreen']),
     menuList(){
       return [
         {
@@ -72,6 +75,7 @@ export default {
   watch: {
   },
   methods: {
+    ...mapActions(screenStore, ["setScreenBounds", "addScreen"]),
     beforeCreateFn(){
       if(this.isClick){
         return true
@@ -81,23 +85,27 @@ export default {
     },
     add(){
       if(this.isClick){
-        this.addScreen = true
+        this.addScreen()
       }
     },
     setScreen(item){
       if(this.isClick){
-        tsbApi.window.setBounds({
+        const bounds = {
           x: item.position[0],
           y: item.position[1],
           width: item.width,
           height: item.height
-        })
-  
-        setTimeout(()=>{
-          this.screenTip = false
-        },500)
+        }
+        this.setScreenBounds(bounds)
       }
-    }
+    },
+    saveScreen(index){
+      this.screenList[index] = {
+        ...this.screenList[index],
+        ...this.currentScreen,
+      }
+      this.$message.success("写入成功");
+    },
 
   },
 }
@@ -132,7 +140,50 @@ export default {
     .select{
       color: rgba(255,255,255,0.85);
       // width: 92px;
-      flex: 1 1 0;
+      flex: 1 1 0;      overflow: hidden;
+      .mask{
+        display: block;
+        background: rgba(0,0,0,0.30);
+        display: none;
+        transition: all 0.5s linear;
+        backdrop-filter: blur(5px);
+      }
+      .change{
+        // top: 10px;
+        top: -80px;
+        transition: all 0.2s linear;
+        background:rgba(80,139,254,1);
+        width: 90%;
+        margin: 0 auto;
+        height: 51px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+      }
+      .save{
+        bottom: -30px;
+        transition: all 0.2s linear;
+        background:rgba(250,173,20,1);
+        width: 90%;
+        margin: 0 auto;
+        height: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+      }
+      &:hover{
+        .mask{
+          display: block
+        }
+        .change{
+          top: 6px;
+        }
+        .save{
+          bottom: 6px;
+        }
+      }
     }
     .add{
       color: rgba(255,255,255,0.65);

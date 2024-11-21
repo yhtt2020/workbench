@@ -30,13 +30,13 @@ export default {
   computed: {
     ...mapWritableState(messageStore, ['messageIndex', 'totalCount']),
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
-    ...mapWritableState(screenStore, ['screenTip']),
+    ...mapWritableState(screenStore, ['screenFlag']),
     ...mapWritableState(usePermissionStore, ['currentEnv']),
   },
   mounted () {
     console.log('this.userInfo :>> ', this.userInfo);
-    // 隐藏桌面记忆弹窗
-    this.screenTip = false
+    // 启动开关 加载完成后才可以监听窗口变化
+    this.screenFlag = true
     this.lastTime = Number(localStorage.getItem('lastBarrageMessageTime'))
     this.setMinute()
     // this.loadMessages()

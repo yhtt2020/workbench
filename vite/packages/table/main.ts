@@ -111,8 +111,8 @@ import tsbApi from './js/lib/tsbApi'
 
 const { ipcRenderer } = require("electron");
 import {screenStore} from "./store/screen";
+import {appStore} from "./store";
 
-                    
 // Your SDKAppID
 // init TUIKit
 if(!usePlat('client')){
@@ -225,8 +225,12 @@ if (usePlat('client')) {
 // 监听窗口位置尺寸变化
 ipcRenderer.on("start-watch-window-size-position", (event, data) => {
   const screen = screenStore()
-  screen.screenTip = true
-  screen.currentScreen = data
+  if(screen.screenFlag){
+    const app = appStore()
+    const zoom = app.settings.zoomFactor
+    screen.screenTip = true
+    screen.currentScreen = {...data, zoom}
+  }
 });
 
 window.$app = $app;
