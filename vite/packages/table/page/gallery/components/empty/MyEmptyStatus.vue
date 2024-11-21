@@ -50,7 +50,10 @@ export default {
 
   methods:{
     goDetail(item){
-      console.log('测试',item);
+      if(item.index==='i'){
+        this.$emit('importLocal')
+        return
+      }
       this.currentID = item.index;
       // if(this.isModal){
       //   if(item.index !== 'i'){
