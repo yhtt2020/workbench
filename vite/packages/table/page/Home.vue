@@ -43,7 +43,6 @@
     ></NewGuidePage>
     <!-- 桌面设置提示 -->
     <ScreenTip v-if="screenTip"></ScreenTip>
-    <AddScreen v-if="addScreen"></AddScreen>
     <RenameScreen v-if="renameScreen"></RenameScreen>
     <!-- 右上方的缩放推荐 -->
     <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
@@ -103,7 +102,6 @@ import cache from "../components/card/hooks/cache";
 // import { communityDeskStore } from "../apps/communityDesk/store/communityDeskStore";
 import { communityNavStore } from "../components/bottomPanel/store/communityNavStore";
 import ScreenTip from "./app/screen/screenTip.vue";
-import AddScreen from "./app/screen/addScreen.vue";
 import RenameScreen from "./app/screen/renameScreem.vue";
 
 import { isMain } from "../js/common/screenUtils";
@@ -205,7 +203,6 @@ export default {
     WebLogin,
     CommunityGroupDesk,
     ScreenTip,
-    AddScreen,
     RenameScreen,
   },
   computed: {

@@ -5,6 +5,7 @@ import _ from "lodash-es";
 import {subIPC,mainIPC} from '../js/common/screenIPC'
 import {nanoid} from "nanoid";
 import {appStore} from "../store";
+import {message} from "ant-design-vue";
 const tips = {
   zoom: {
     status: true,
@@ -53,7 +54,7 @@ export const screenStore = defineStore('screen', {
     screenDetail:{},//当前屏幕信息
     screenList:[],//当前窗口的位置大小存储 现版本最多记忆三条
     screenTip: false,//是否弹出桌面记忆设置弹窗
-    addScreen: false,//是否弹出新增桌面记忆弹窗
+    screenFlag: false,//等加载完后才允许出现弹窗
     renameScreen: false,//是否弹出桌面记忆重命名弹窗
     renameIndex: -1,
     currentScreen: {},//当前桌面位置大小信息
@@ -76,6 +77,48 @@ export const screenStore = defineStore('screen', {
       }
       this.screens.push(s)
       return s
+    },
+    /**
+     * 设置屏幕大小
+     */
+    setScreenBounds(setBounds){
+      const app = appStore()
+      // 设置先变小后变大
+      tsbApi.window.setFullScreen(false)
+      tsbApi.window.setBounds({
+        ...setBounds,
+        width: 600,
+        height: 400,
+      })
+      const zoom = setBounds.zoom?setBounds.zoom:100
+      app.settings.zoomFactor = zoom
+      tsbApi.window.setZoomFactor(zoom/100);
+      setTimeout(()=>{
+        tsbApi.window.setBounds(setBounds)
+        setTimeout(()=>{
+          this.screenTip = false
+        },500)
+      },500)
+
+    },
+    /**
+     * 直接存储屏幕设置
+     */
+    addScreen(){
+      const app = appStore()
+      const zoom = app.settings.zoomFactor
+      const len = this.screenList.length
+      this.screenList.push(
+        {
+          ...this.currentScreen, 
+          zoom: zoom,
+          title: `设置${len+1}`
+        }
+      ) 
+      message.success({content: `添加设置成功`, key: 'action'})
+      setTimeout(()=>{
+        this.screenTip = false
+      },500)
     },
     /**
      * 副屏专门绑定的IPC信息
@@ -138,7 +181,7 @@ export const screenStore = defineStore('screen', {
       if(this.timer){
         clearTimeout(this.timerTag)
       }
-      this.timer= setTimeout(()=>{
+    this.timer= setTimeout(()=>{
         this.taggingScreen=false
         clearTimeout(this.timerTag)
       },3000)

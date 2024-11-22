@@ -11,12 +11,15 @@
       工作台位置变化，可选择需要使用的记忆位置，或选择新增记忆保存为常用位置。（可记录位置、大小、全屏状态和缩放比例）
     </div>
     <div class="tab-list">
-      <div class="tab select" :style="{marginLeft: index>0?'8px':0}" v-for="(item, index) in screenList"
+      <div class="tab select relative" :style="{marginLeft: index>0?'8px':0}" v-for="(item, index) in screenList"
       :key="index">
         <xt-mix-menu :menus="menuList" @mounted="currentIndex = index">
-          <div class="flex items-center h-full" @click="setScreen(item)" style="flex-direction: column;">
+          <div class="flex items-center h-full" style="flex-direction: column;">
             <MyIcon icon="fluent:desktop-16-regular" width="24" height="24" color="rgba(255,255,255,0.85)" style="margin-top: 20px" />
             <span>{{ item.title }}</span>
+            <div class="mask h-full w-full absolute"></div>
+            <div class="change absolute" @click="setScreen(item)">读取</div>
+            <div class="save absolute" @click="saveScreen(index)">写入</div>
           </div>
         </xt-mix-menu>
       </div>
@@ -47,7 +50,7 @@ export default {
   props: {
   },
   computed: {
-    ...mapWritableState(screenStore, ["screenTip", 'screenList', 'addScreen', 'renameScreen', 'renameIndex']),
+    ...mapWritableState(screenStore, ["screenTip", 'screenList', 'renameScreen', 'renameIndex', 'currentScreen']),
     menuList(){
       return [
         {
@@ -79,24 +82,29 @@ export default {
   watch: {
   },
   methods: {
+    ...mapActions(screenStore, ["setScreenBounds", "addScreen"]),
     add(){
-      this.addScreen = true
+      this.addScreen()
     },
     close(){
       this.screenTip = false
     },
     setScreen(item){
-      tsbApi.window.setBounds({
+      const bounds =  {
         x: item.position[0],
         y: item.position[1],
         width: item.width,
         height: item.height
-      })
-
-      setTimeout(()=>{
-        this.screenTip = false
-      },500)
-    }
+      }
+      this.setScreenBounds(bounds)
+    },
+    saveScreen(index){
+      this.screenList[index] = {
+        ...this.screenList[index],
+        ...this.currentScreen,
+      }
+      this.$message.success("写入成功");
+    },
 
   },
 }
@@ -111,7 +119,7 @@ export default {
   right: 12px;
   bottom: 76px;
   // height: 260px;
-  width: 320px;
+  width: 350px;
   padding: 16px 16px 12px;
 
   .title{
@@ -134,7 +142,7 @@ export default {
     margin-top: 12px;
     display: flex;
     .tab{
-      height: 96px;
+      height: 100px;
       border-radius: 12px;
       display: flex;
       align-items: center;
@@ -143,6 +151,7 @@ export default {
       font-size: 14px;
       background: rgba(0,0,0,0.30);
       font-weight: 400;
+
       // padding-top: 20px;
       span{
         margin-top: 8px;
@@ -151,7 +160,52 @@ export default {
     }
     .select{
       color: rgba(255,255,255,0.85);
-      width: 92px;
+      width: 100px;
+      overflow: hidden;
+      .mask{
+        display: block;
+        background: rgba(0,0,0,0.30);
+        display: none;
+        transition: all 0.5s linear;
+        backdrop-filter: blur(5px);
+      }
+      .change{
+        // top: 10px;
+        top: -80px;
+        transition: all 0.2s linear;
+        background:rgba(80,139,254,1);
+        width: 84px;
+        margin: 0 auto;
+        height: 51px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+      }
+      .save{
+        bottom: -30px;
+        transition: all 0.2s linear;
+        background:rgba(250,173,20,1);
+        width: 84px;
+        margin: 0 auto;
+        height: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+      }
+      &:hover{
+        .mask{
+          display: block
+        }
+        .change{
+          top: 8px;
+        }
+        .save{
+          bottom: 8px;
+        }
+      }
+
     }
     .add{
       color: rgba(255,255,255,0.65);

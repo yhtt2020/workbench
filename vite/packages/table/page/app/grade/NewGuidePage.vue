@@ -130,6 +130,7 @@ import { useWidgetStore } from "../../../components/card/store";
 import { useCustomLayout } from "../../../components/desk/freeLayout/useCustomLayout";
 import { taskStore } from "../../../apps/task/store";
 import { useAppModal } from "../../../apps/appModal/src/hook/useAppModal";
+import { useAddCard } from "../../../hooks/src/useCard";
 
 export default {
   components: {
@@ -303,7 +304,7 @@ export default {
   },
   methods: {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData", "setFreeLayoutData", "setFreeLayoutState", 'renewFreeLayout', "getFreeLayout1"]),
-
+    useAddCard,
     // 设置自由布局数据
     showFreeLayout(type) {
       this.freeLayoutId = 'mj36hf6h'
@@ -517,20 +518,34 @@ export default {
           this.folderList.push({ ...item })
         }
       })
-      this.setHeaderList()
-      setTimeout(() => {
-        useCustomLayout({
-          headerList: this.headerList,
-          folderList: this.folderList,
-          cb: (position) => {
-            this.$bus.emit("cutCanvas",position);
-          },
+      if(this.guideList.length == 1 && this.guideList[0] == 1){
+        this.folderList.map(item=>{
+          this.useAddCard({
+            ...item,
+            data: item.customData
+          })
+        })
+        this.nextStep();
+        message.success({
+          content: "添加成功。",
+          key: "preparing",
         });
-      }, 1)
-      if(this.guideList.length == 5 ){
-        this.setExeListNav()
+      }else{
+        this.setHeaderList()
+        setTimeout(() => {
+          useCustomLayout({
+            headerList: this.headerList,
+            folderList: this.folderList,
+            cb: (position) => {
+              this.$bus.emit("cutCanvas",position);
+            },
+          });
+        }, 1)
+        if(this.guideList.length == 5 ){
+          this.setExeListNav()
+        }
+        this.nextStep();
       }
-      this.nextStep();
     },
 
     setHeaderList() {

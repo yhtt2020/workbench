@@ -1,6 +1,7 @@
 import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "../../components/desk/freeLayout/store";
 import { useGetDesk } from "./useDesk";
+import {nanoid} from "nanoid";
 // 定义参数接口
 interface AddCardParams {
   name: string; // 假设name是必传的字符串类型
@@ -19,7 +20,7 @@ interface AddCardParams {
  */
 export const useAddCard = (option: AddCardParams): number | string => {
   // 解构属性，并使用默认值
-  const { name = "", data = {}, id = Date.now(), deskId = "" } = option!;
+  const { name = "", data = {}, id = nanoid(4), deskId = "" } = option!;
 
   if (!name) {
     console.error("name is required");
