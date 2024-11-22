@@ -2,16 +2,16 @@
   <div class="fixed overflow-hidden modal-center xt-modal tran" style="z-index: 999999;">
     <div class="title">
       <MyIcon icon="fluent-emoji-flat:desktop-computer" width="24" height="24" />
-      <span>检测到工作台所在屏幕发生变化</span>
+      <span class="xt-text">检测到工作台所在屏幕发生变化</span>
     </div>
     <div class="top cursor-pointer" @click="close">
       <MyIcon icon="fluent:dismiss-16-filled" width="14" height="14" color="#212121" />
     </div>
-    <div class="content">
+    <div class="content xt-text-2">
       工作台位置变化，可选择需要使用的记忆位置，或选择新增记忆保存为常用位置。（可记录位置、大小、全屏状态和缩放比例）
     </div>
     <div class="tab-list">
-      <div class="tab select relative" :style="{marginLeft: index>0?'8px':0}" v-for="(item, index) in screenList"
+      <div class="tab select relative tt-mask-bg " :style="{marginLeft: index>0?'8px':0}" v-for="(item, index) in screenList"
       :key="index">
         <xt-mix-menu :menus="menuList" @mounted="currentIndex = index">
           <div class="flex items-center h-full" style="flex-direction: column;">
@@ -23,7 +23,7 @@
           </div>
         </xt-mix-menu>
       </div>
-      <div class="tab add" v-if="screenList.length<3" :style="{marginLeft: screenList.length !== 0?'8px':0}" @click="add">
+      <div class="tab add tt-mask-bg " v-if="screenList.length<3" :style="{marginLeft: screenList.length !== 0?'8px':0}" @click="add">
         <MyIcon icon="fluent:add-20-filled" width="24" height="24" style="margin-top: 20px" />
         <span>新增记忆</span>
       </div>
@@ -128,14 +128,14 @@ export default {
     span{
       margin-left: 12px;
       font-size: 16px;
-      color: rgba(255,255,255,0.85);
+      // color: rgba(255,255,255,0.85);
       font-weight: 500;
     }
   }
   .content{
     margin-top: 12px;
     font-size: 16px;
-    color: rgba(255,255,255,0.60);
+    // color: rgba(255,255,255,0.60);
     font-weight: 400;
   }
   .tab-list{
