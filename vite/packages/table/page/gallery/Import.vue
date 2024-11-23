@@ -16,16 +16,16 @@
   <div class="line-title">
     数据库修复
   </div>
-  <div class="line">
-    <a-button @click="clearFix">
-      清空并修复数据库
-    </a-button>
+  <div class="line item-content">
+    <xt-button @click="clearFix">
+      重置数据库
+    </xt-button>
   </div>
 
   <a-divider></a-divider>
   <div class="line-title">本地资源</div>
-  <div class="line" style="text-align: center">
-    <a-button type="primary" @click="importFile">选择文件导入</a-button>
+  <div class="line item-content" >
+    <xt-button type="theme" @click="importFile">选择文件导入</xt-button>
   </div>
   <div class="line" style="text-align: center;margin-bottom: 1em">或者</div>
   <div class="line">
@@ -74,8 +74,14 @@ export default {
   },
   methods: {
     clearFix(){
-      this.myPapers=[];
-      this.activePapers=[];
+      window.$ui.confirm("确认重置数据库？此操作不可还原。", "", {
+        ok: () => {
+          this.myPapers=[];
+          this.activePapers=[];
+          message.success("已重置数据库");
+        },
+      });
+
       // const videoList = fs.readdirSync(path.join(this.settings.savePath, 'lively'));
       // const localPaper =  fs.readdirSync(path.join(path.join(this.settings.savePath), 'static'));
       // for(const item of videoList){

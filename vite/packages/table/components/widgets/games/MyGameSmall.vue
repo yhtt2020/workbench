@@ -16,7 +16,7 @@
   >
     <!-- 小尺寸-->
     <template v-if="customData.customSize === '2x4'">
-      <MyGameSmallSize :gameClass="customData.id" :mySteamGameList="steamGameList" />
+      <MyGameSmallSize :gameClass="customData.id" :mySteamGameList="steamGameList"  :myOtherGameList="localGameList"   @import="openLocal"/>
     </template>
 
     <!-- 大尺寸-->
@@ -25,6 +25,7 @@
         :gameClass="customData.id"
         :mySteamGameList="steamGameList"
         :myOtherGameList="localGameList"
+        @import="openLocal"
       />
     </template>
   </xt-container>
@@ -129,7 +130,26 @@ export default {
     deleteCard() {
       this.$emit("delete");
     },
-
+    async openLocal() {
+      let openPath = await tsbApi.dialog.showOpenDialog({
+        title: "选择导入的代码",
+        filters: [{ name: "程序或者快捷方式", extensions: ["exe","url"] },{ name: "全部", extensions: ["*"] }],
+        properties: ["multiSelections"],
+      });
+      console.log(openPath,'open')
+      if (!openPath) {
+        console.log('no openpath')
+        return;
+      }
+      let dropFiles = await ipc.sendSync("getFilesIcon", {
+        files: JSON.parse(JSON.stringify(openPath)),
+      });
+      console.log(dropFiles,'rop')
+      this.modalVisibility = false;
+      dropFiles.forEach((game) => {
+        this.localGameList.unshift(game);
+      });
+    },
     // 进入我的游戏应用
     goRoute() {
       this.$router.push({
