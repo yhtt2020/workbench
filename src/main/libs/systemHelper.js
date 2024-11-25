@@ -82,6 +82,7 @@ module.exports = class SystemHelper {
         } catch (e) {
           console.warn('存在失败的', e, _file)
           icon = '/icons/winapp.png'
+          continue
         }
 
         filepaths.push({
@@ -173,10 +174,15 @@ module.exports = class SystemHelper {
       return ''
     }
   }
+
   static async extractFileIcon (uri) {
+
+
+
     if(uri.endsWith('.url')){
      return await this.readUrlIconInfo(uri)
     }
+
     let savePath = path.join(app.getPath('userData'), 'icons')
     fs.ensureDirSync(savePath)
     let hash = SystemHelper.sha(uri)
