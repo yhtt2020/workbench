@@ -1,11 +1,12 @@
 global.tableWin = null
-let { app, ipcMain: ipc, Notification, session } = require('electron')
+let {app, ipcMain: ipc, Notification, session} = require('electron')
 const path = require('path')
 const fs = require('fs')
 const TableScreenManager = require('./tableScreenManager')
 const ScreenCaptureManager = require('./screenCaptureManager')
-const { getDeskFiles } = require('./libs/systemHelper')
+const {getDeskFiles} = require('./libs/systemHelper')
 const SystemHelper = require('./libs/systemHelper')
+const systemHelper = require("./libs/systemHelper");
 //测试
 const screenCaptureManager = new ScreenCaptureManager()
 
@@ -38,11 +39,11 @@ class TableManager {
 
   tableScreenManager
 
-  static alive () {
+  static alive() {
     return global.tableWin && !global.tableWin.window.isDestroyed()
   }
 
-  async init () {
+  async init() {
 
     if (global.tableWin === null) {
       let tableWinSetting = settings.get('tableWinSetting')
@@ -54,7 +55,7 @@ class TableManager {
       global.tableWin = await windowManager.create({
         name: 'table',
         windowOption: {
-          acceptFirstMouse:true,
+          acceptFirstMouse: true,
           alwaysOnTop: false,
           width: 1098,
           minimizable: false,
@@ -73,44 +74,44 @@ class TableManager {
           nodeIntegration: true,
           enableBlinkFeatures: ['unsafely-treat-insecure-origin-as-secure'],
           sandbox: false,
-          partition:'persist:tableWin',
+          partition: 'persist:tableWin',
           contextIsolation: false,
           additionalArguments: [
             '--app-path=' + app.getPath('exe'),
             '--app-dir_name=' + __dirname,
           ]
         },
-        onReadyToShow:()=>{
+        onReadyToShow: () => {
           if (tableWinSetting) {
             //通过多次设置来规避缩放率的问题
-            if(tableWinSetting.isFullScreen){
-              setTimeout(()=>{
-                this.window.setSize(10,10)
+            if (tableWinSetting.isFullScreen) {
+              setTimeout(() => {
+                this.window.setSize(10, 10)
                 this.window.setPosition(tableWinSetting.bounds.x, tableWinSetting.bounds.y)
                 this.window.setFullScreen(true)
-              },2000)
-            }else if (!tableWinSetting.isMaximized) {
+              }, 2000)
+            } else if (!tableWinSetting.isMaximized) {
               setTimeout(() => {
-                this.window.setSize(10,10)
+                this.window.setSize(10, 10)
                 this.window.setPosition(tableWinSetting.bounds.x, tableWinSetting.bounds.y)
-                setTimeout(()=>{
+                setTimeout(() => {
                   this.window.setSize(tableWinSetting.bounds.width, tableWinSetting.bounds.height)
-                },1000)
+                }, 1000)
               }, 1000)
             }
           }
         }
       })
       require("@electron/remote/main").enable(tableWin.window.webContents)
-      tableWin.window.webContents.session.webRequest.onHeadersReceived({ urls: ['*://*/*'] }, (d, c) => {
+      tableWin.window.webContents.session.webRequest.onHeadersReceived({urls: ['*://*/*']}, (d, c) => {
         if (d.responseHeaders['X-Frame-Options']) {
           delete d.responseHeaders['X-Frame-Options']
         } else if (d.responseHeaders['x-frame-options']) {
           delete d.responseHeaders['x-frame-options']
         }
-        c({ cancel: false, responseHeaders: d.responseHeaders })
+        c({cancel: false, responseHeaders: d.responseHeaders})
       })
-      tableWin.window.webContents.session.setPermissionCheckHandler((detail)=>{
+      tableWin.window.webContents.session.setPermissionCheckHandler((detail) => {
         return true
       })
       tableWin.window.webContents.session.setPermissionRequestHandler((webContents, permission, callback) => {
@@ -209,49 +210,50 @@ class TableManager {
     global.tableAppManager.setTableWin(tableWin.window)
     global.tableTabManager.setTableWin(tableWin.window)
 
-     this.ensureDeskIcons().then()
+    this.ensureDeskIcons().then()
   }
 
   /**
    * 确认并获取桌面图标
    */
-  async ensureDeskIcons(){
-    const fs=require('fs-extra')
+  async ensureDeskIcons() {
+    const fs = require('fs-extra')
     let savePath = path.join(app.getPath('userData'), 'icons')
-    if(!fs.existsSync(savePath)){
+    if (!fs.existsSync(savePath)) {
       //取一次桌面的icons
       fs.ensureDirSync(savePath)
-      let files=await SystemHelper.getDeskFiles(false)
-      files.forEach(file=>{
+      let files = await SystemHelper.getDeskFiles(false)
+      files.forEach(file => {
         SystemHelper.extractFileIcon(file.path)
       })
     }
 
   }
-  saveBounds (fullscreen) {
+
+  saveBounds(fullscreen) {
     let savedWinSetting = settings.get('tableWinSetting')
-    if(!savedWinSetting){
-      savedWinSetting={}//防止对象无法被序列化
+    if (!savedWinSetting) {
+      savedWinSetting = {}//防止对象无法被序列化
     }
     let tableWinSetting = {
       ...savedWinSetting,
       bounds: this.window.getBounds(),
       isMaximized: this.window.isMaximized(),
     }
-    if(fullscreen!==undefined){
-      tableWinSetting.isFullScreen=fullscreen
+    if (fullscreen !== undefined) {
+      tableWinSetting.isFullScreen = fullscreen
     }
     settings.set('tableWinSetting', tableWinSetting)
   }
 
-  close () {
+  close() {
     this.saveBounds()
     global.tableAppManager.closeAllApp()
     global.tableWin.window.close()
     global.tableWin = null
   }
 
-  send (channel, args) {
+  send(channel, args) {
     if (global.tableWin && !global.tableWin.window.isDestroyed()) {
       tableManager.window.webContents.send(channel, args)
     }
@@ -268,7 +270,7 @@ app.whenReady().then(() => {
     }
   })
 
-  ipc.on('openDevTool',async()=>{
+  ipc.on('openDevTool', async () => {
     if (TableManager.alive()) {
       global.tableWin.window.webContents.openDevTools()
     }
@@ -305,27 +307,27 @@ app.whenReady().then(() => {
   ipc.on('getFilesIcon', async (e, args) => {
     let files = args.files
     let result = []
+    let icon = ''
+    let ext = ''
     let path = require('path')
     for (let file of files) {
-        let link = null
-        let title = path.basename(file)
-        if (file.endsWith('.lnk')) {
-          link = require('electron').shell.readShortcutLink(file)
-        }
-        let icon =''
-        try{
-          icon=await app.getFileIcon(link ? link.target : file)
-        }catch (e){
-          icon ='/icons/winapp.png'
-        }
+      let link = null
+      let title = path.basename(file)
+      if (file.endsWith('.lnk')) {
+        let urlFile = require('electron').shell.readShortcutLink(_path)
+        file = urlFile.target
+        ext = path.parse(file).ext //取实际的扩展名
+      } else if (file.endsWith('.url')) {
+        icon = await SystemHelper.readUrlIconInfo(file)
+      }
 
-        result.push({
-          name: path.parse(file).name,
-          ext: path.parse(file).ext,
-          path: link ? link.target : file,
-          icon: icon.toDataURL(),
-          title: title
-        })
+      result.push({
+        name: path.parse(file).name,
+        ext: path.parse(file).ext,
+        path: link ? link.target : file,
+        icon: icon,
+        title: title
+      })
 
     }
     e.returnValue = result
@@ -333,7 +335,7 @@ app.whenReady().then(() => {
 
   ipc.on('getDeskApps', async (e) => {
     let apps = []
-    apps=await getDeskFiles()
+    apps = await getDeskFiles()
     e.returnValue = apps
   })
 
