@@ -175,14 +175,14 @@ export default {
     this.items.splice(5,this.items.length-5) //退出的时候清理items，提升载入时间
   },
   methods: {
-    ...mapActions(clipboardStore,['nextPage','doSearch']),
+    ...mapActions(clipboardStore,['nextPage','doSearch','resetPage']),
     isWin,
     setLoadEvent(){
      this.loadEvent=_.debounce(async () => {
-          console.error('触底事件')
           if (this.hasNextPage) {
             console.log('查询下一页')
             let rs = await this.nextPage(this.dbKey)
+            console.log(this.dbKey,'dbkey')
             if (!rs) {
               message.info({
                 content: '已经到底了',
@@ -194,7 +194,7 @@ export default {
             console.log('由于没有下一页返工')
             return
           }
-        },300,
+        },1000,
         {
           leading:true
         })
@@ -237,8 +237,10 @@ export default {
         this.items=[]
         if (newTab.name === 'history') {
           this.dbKey='clipboard:item:'
+          this.resetPage()
           this.doLoadNextPage()
         } else if (newTab.name === 'collect') {
+          this.resetPage()
           this.dbKey='clipboard:collection:'
           this.doLoadNextPage()
         }
