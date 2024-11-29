@@ -63,9 +63,10 @@ export default {
     loadStaticPaper: {
       type: Function
     },
-    // getLoadLively:{
-    //   type:Function
-    // }
+
+    getLoadLively:{
+      type:Function
+     }
   },
   computed: {
     ...mapWritableState(paperStore, ['settings','myPapers'])
@@ -96,7 +97,9 @@ export default {
       if (this.settings.savePath) {
         let openPath = await tsbApi.dialog.showOpenDialog({
           title: '选择导入的代码',
-          filters: [{name: '图片', extensions: ['png', 'jpg', 'jpeg', 'bmp', 'gif']}, {
+          filters: [{name: '支持的格式', extensions: ['png', 'jpg', 'jpeg', 'bmp', 'gif','mp4', 'mpeg', 'avi', 'rmvb']},
+            {name: '图片', extensions: ['png', 'jpg', 'jpeg', 'bmp', 'gif']},
+            {
             name: '视频',
             extensions: ['mp4', 'mpeg', 'avi', 'rmvb']
           }, {name: '全部', extensions: ['*']}],
@@ -117,7 +120,7 @@ export default {
             } else if (videoReg.test(openPath[i])) {
               // 将动态的文件复制到指定存放的动态文件目录中
               fs.copySync(openPath[i], `${livelyDir}\\${openPath[i].split("\\")[openPath[i].split("\\").length - 1]}`)
-              // this.getLoadLively()
+              this.getLoadLively()
             }
           }
           message.success('文件导入成功');

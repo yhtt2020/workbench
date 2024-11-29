@@ -365,6 +365,7 @@ export default {
               const livelyItem = {
                 src: videoPath,
                 path: cdnUrl(`/lively/${filename}.jpg`),
+                type:'video',
                 srcProtocol:
                   "file://" + path.join(this.settings.savePath, "lively", item),
               };
@@ -389,6 +390,7 @@ export default {
             );
             let image = {
               title: false,
+              type:'image',
               src: `file://${staticDir}/${item}`,
               path: `file://${staticDir}/${item}`,
               time: this.paperTime,
