@@ -63,8 +63,11 @@ export const clipboardStore = defineStore("clipboardStore", {
       this.searchWords = ''
       return res
     },
+    async resetPage(){
+      this.hasNextPage = true
+    },
     async nextPage() {
-
+     console.log('1')
       let dbKey = ''
       if (this.tab.name === 'history') {
         dbKey = 'clipboard:item:'
@@ -73,13 +76,21 @@ export const clipboardStore = defineStore("clipboardStore", {
       }
 
       let time = Date.now()
+      console.log(this.hasNextPage,'还有没有下一页')
       if (this.hasNextPage) {
+        console.log('2')
         this.loading = true
-        await tsbApi.db.createIndex({
-          index: {
-            fields: ['type', 'createTime', 'content', 'searchKey']
-          }
-        })
+        try{
+          await tsbApi.db.createIndex({
+            index: {
+              fields: ['type', 'createTime', 'content', 'searchKey']
+            }
+          })
+        }catch (e) {
+          console.error(e)
+        }
+
+        console.log('8')
         let map: any = {
           _id: {
             $regex: new RegExp(`^${dbKey}`)
@@ -93,7 +104,7 @@ export const clipboardStore = defineStore("clipboardStore", {
             $lt: this.items[this.items.length - 1].createTime
           }
         }
-
+        console.log('9')
         if (this.searchWords) {
           //替换掉特殊字符，保证查询准确性
           function escapeSpecialChars(str) {
@@ -118,7 +129,7 @@ export const clipboardStore = defineStore("clipboardStore", {
             }
           ]
         }
-
+        console.log('10')
         let rsFiltered = await tsbApi.db.find({
           selector: map,
           limit: this.settings.pageSize,
@@ -128,7 +139,7 @@ export const clipboardStore = defineStore("clipboardStore", {
             }
           ]
         })
-
+        console.log('11')
 
         this.items = this.items.concat(rsFiltered.docs)
         this.loading = false
@@ -140,10 +151,10 @@ export const clipboardStore = defineStore("clipboardStore", {
             }
           }
         }
-
+        console.log('6')
         return rsFiltered
       }
-
+      console.log('4')
       // const rs = await tsbApi.db.allDocsQuery({
       //   start_key: this.items[this.items.length - 1]._id + '\ufff0',
       //   end_key: dbKey,

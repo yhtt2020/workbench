@@ -24,8 +24,6 @@
       icon="fluent:arrow-clockwise-16-regular"
       @onIconClick="refreshIcon"
     />
-    {{
-    iconValue }}
     <xt-option-icon  v-model:icon="iconValue" v-model:input="nameValue" :menus="['emoji']"  :upload="false"/>
   </div>
 </template>

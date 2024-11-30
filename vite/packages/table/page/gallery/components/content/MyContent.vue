@@ -6,13 +6,18 @@
        <a-col class="image-wrapper" v-for="(img,index) in myPaperList" :span="6"  >
          <div class="w-full h-full pointer my-paper" >
           <xt-mix-menu :menus="getMenuList(img)" fn="callBack"  @mounted="this.myCurrentID = img" :stopPropagation="false" >
-            <xt-preview-img
+            <xt-preview-img  v-if="img.type==='image'"
               :imgList="imgList"
               :index="index">
               <img :src="fileImageExtension(img) ? img.path : img.src" :data-source="img.path" :alt="img.resolution"   class="relative image-item pointer" />
             </xt-preview-img>
+
+            <video class="relative image-item pointer"  :src="img.srcProtocol"  @mouseenter="continuePlay($event)" @mouseleave="stopPlay($event)">
+
+            </video>
+
             <div class="absolute top-1/2 left-1/2 " style="transform: translate(-50% ,-50%);">
-              <div v-if="fileImageExtension(img)" @click="previewVideo(img)"  class="flex items-center justify-center play-icon pointer" style="opacity: 0;">
+              <div v-if="fileImageExtension(img)" @click="previewVideo(img)"  class="flex items-center justify-center play-icon pointer" >
                 <MyContentIcon icon="fluent:play-16-filled" style="font-size: 2rem;color: var(--active-text) !important;"/>
               </div>
               <xt-button w="100" :h="isModal ? 32 : 40" v-else style="opacity: 0; border-radius: 8px;" class="set-paper xt-bg-t-2" @click="setAppPaper(img)">
@@ -156,10 +161,16 @@ let fs,path
    },
 
    methods:{
+
     fileImageExtension,isInActive,isInMyPapers,isLocalDownload,
     ...mapActions(paperStore,['addToActive','removeToMyPaper']),
     ...mapActions(appStore,['setBackgroundImage']),
-
+     continuePlay(event){
+       event.target.play()
+     },
+     stopPlay(event){
+       event.target.pause()
+     },
     // 播放动态壁纸
     previewVideo(img){
      this.$emit('playPaperVideo',img);
@@ -315,6 +326,7 @@ let fs,path
   height: 4em;
   left: 50%;
   top: 50%;
+   opacity: 1;
   border-radius: 100px;
   transform: translate(-50%, -50%);
  }
@@ -325,8 +337,11 @@ let fs,path
 
  .my-paper{
   &:hover{
-    .play-icon,.img-button,.img-checkbox,.set-paper{
+    .img-button,.img-checkbox,.set-paper{
       opacity: 1 !important;
+    }
+    .play-icon {
+      opacity: 0;
     }
   }
  }
