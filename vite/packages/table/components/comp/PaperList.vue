@@ -235,9 +235,6 @@ export default {
     },
 
 
-  },
-  computed:{
-    ...mapState(paperStore,['myPapers','settings']),
   }
 }
 </script>

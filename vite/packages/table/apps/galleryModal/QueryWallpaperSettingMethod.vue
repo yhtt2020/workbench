@@ -16,7 +16,7 @@ export default defineComponent({
       this.open=true
       this.url=url
     },
-    onConfirmClick(type){
+    onConfirmClick(type="common"){
       if (type === "common") {
         this.updateCommonBg(this.url);
       } else if (type === "independent") {

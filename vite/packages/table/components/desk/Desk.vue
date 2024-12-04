@@ -591,6 +591,11 @@ export default {
     if (this.fullScreen) {
       this.fullScreen = false;
     }
+    //移除全部绑定事件，防止重复绑定
+    this.$bus.off('startAdjust')
+    this.$bus.off('scrollbarUpdate')
+    this.$bus.off('setIndependentBg')
+    this.$bus.off('redirect')
   },
   methods: {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),

@@ -29,8 +29,10 @@ export default defineComponent({
     'independentBg':{
       handler(){
         this.$nextTick(() => {
-          this.$refs.backgroundVideo.load()
-          this.$refs.backgroundVideo.play()
+          if(this.$refs.backgroundVideo){
+            this.$refs.backgroundVideo.load()
+            this.$refs.backgroundVideo.play()
+          }
         })
       },
       deep:true,
