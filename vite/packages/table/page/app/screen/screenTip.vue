@@ -1,5 +1,8 @@
 <template>
-  <div class="fixed overflow-hidden modal-center xt-modal tran" style="z-index: 999999;">
+  <div class="fixed overflow-hidden modal-center xt-modal" ref="screenTip" :class="{tran: isTran, open: isOpen}"
+    @mouseenter="changeActive" 
+    @mouseleave="removeActive" 
+    style="z-index: 999999;">
     <div class="title">
       <MyIcon icon="fluent-emoji-flat:desktop-computer" width="24" height="24" />
       <span class="xt-text">检测到工作台所在屏幕发生变化</span>
@@ -45,6 +48,9 @@ export default {
   data() {
     return {
       currentIndex: 0,
+      isTran: false,
+      isOpen: false,
+      timer: null,
     }
   },
   props: {
@@ -77,17 +83,41 @@ export default {
     }
   },
   mounted() {
+    setTimeout(()=>{
+      this.isOpen = true
+    },300)
+    this.timer = setTimeout(()=>{
+      this.close()
+    }, 10000)
+    
+  },
+  unmounted() {
+    this.close()
   },
 
   watch: {
   },
   methods: {
     ...mapActions(screenStore, ["setScreenBounds", "addScreen"]),
+    changeActive(){
+      clearTimeout(this.timer)
+      this.timer = null
+    },
+    removeActive(){    
+      this.timer = setTimeout(()=>{
+        this.close()
+      }, 10000)
+    },
     add(){
       this.addScreen()
     },
     close(){
-      this.screenTip = false
+      this.isTran = true
+      setTimeout(()=>{
+        this.screenTip = false
+        clearTimeout(this.timer)
+        this.timer = null
+      },300)
     },
     setScreen(item){
       const bounds =  {
@@ -99,11 +129,16 @@ export default {
       this.setScreenBounds(bounds)
     },
     saveScreen(index){
-      this.screenList[index] = {
-        ...this.screenList[index],
-        ...this.currentScreen,
-      }
-      this.$message.success("写入成功");
+      window.$ui.confirm(`是否确定覆盖当前桌面记忆`, "", {
+        type: "warning",
+        ok: ()=>{
+          this.screenList[index] = {
+            ...this.screenList[index],
+            ...this.currentScreen,
+          }
+          this.$message.success("写入成功");
+        },
+      });
     },
 
   },
@@ -111,16 +146,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.tran{
+  transform: translateX(500px);
+}
+.open{
+  right: 16px !important;
+}
 .modal-center {
   background: #212121;
   border: 1px solid rgba(255,255,255,0.1);
   box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.03);box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);box-shadow: 0px 0px 40px 0px rgba(0,0,0,0.2);
   border-radius: 12px;
-  right: 12px;
+  right: -500px;
   bottom: 76px;
   // height: 260px;
   width: 350px;
   padding: 16px 16px 12px;
+  transition: all 0.3s linear;
 
   .title{
     display: flex;

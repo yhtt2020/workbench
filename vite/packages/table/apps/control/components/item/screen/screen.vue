@@ -5,7 +5,7 @@
       <div class="tab select relative xt-mask" :style="{marginLeft: index>0?'8px':0}" v-for="(item, index) in screenList"
       :key="index">
         <xt-mix-menu :menus="menuList" @mounted="currentIndex = index" :beforeCreateFn="beforeCreateFn">
-          <div class="flex items-center h-full" @click="setScreen(item)" style="flex-direction: column;">
+          <div class="flex items-center h-full" style="flex-direction: column;">
             <MyIcon icon="fluent:desktop-16-regular" width="24" height="24" color="rgba(255,255,255,0.85)" style="margin-top: 22px" />
             <span>{{ item.title }}</span>
             <div class="mask h-full w-full absolute"></div>
@@ -100,11 +100,16 @@ export default {
       }
     },
     saveScreen(index){
-      this.screenList[index] = {
-        ...this.screenList[index],
-        ...this.currentScreen,
-      }
-      this.$message.success("写入成功");
+      window.$ui.confirm(`是否确定覆盖当前桌面记忆`, "", {
+        type: "warning",
+        ok: ()=>{
+          this.screenList[index] = {
+            ...this.screenList[index],
+            ...this.currentScreen,
+          }
+          this.$message.success("写入成功");
+        },
+      });
     },
 
   },
