@@ -2,9 +2,9 @@
     <!-- 新增桌面记忆弹窗 -->
     <xt-modal title="桌面记忆重命名" :index="1002" boxClass="rounded-xl p-4" :mask="false" :header="true" :footer="true" v-model="renameScreen" v-if="renameScreen" @ok="handleOk" >
       <div class="relative xt-modal rounded-xl" style="width: 500px; height: 100%;" >
-         <div class="title p-4">记住您的工作台位置、缩放等设置，在屏幕发生变化时，可以快速切换需要使用的记忆模式。</div>
-         <div class="content p-4">
-          <div class="name">名称</div>
+         <div class="title p-4 xt-bg-2 xt-text">记住您的工作台位置、缩放等设置，在屏幕发生变化时，可以快速切换需要使用的记忆模式。</div>
+         <div class="content p-4 xt-bg-2">
+          <div class="name xt-text">名称</div>
           <div class="box">
             <a-input
               class="h-10 xt-mask xt-text"
@@ -79,20 +79,20 @@ export default {
 <style lang="scss" scoped>
   .title{
     font-size: 14px;
-    color: hsla(0, 0%, 100%, 0.85);
+    // color: hsla(0, 0%, 100%, 0.85);
     // font-weight: 600;
-    background: #2A2A2A;
+    // background: #2A2A2A;
     border-radius: 10px;
     width: 100%;
   }
   .content{
     margin-top: 12px;
-    background: #2A2A2A;
-border-radius: 12px;
-width: 100%;
+    // background: #2A2A2A;
+    border-radius: 12px;
+    width: 100%;
     .name{
       font-size: 16px;
-      color: rgba(255,255,255,0.85);
+      // color: rgba(255,255,255,0.85);
       font-weight: 400;
     }
     .box{
