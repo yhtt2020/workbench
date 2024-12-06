@@ -95,9 +95,9 @@ export const screenStore = defineStore('screen', {
       tsbApi.window.setZoomFactor(zoom/100);
       setTimeout(()=>{
         tsbApi.window.setBounds(setBounds)
-        setTimeout(()=>{
-          this.screenTip = false
-        },500)
+        // setTimeout(()=>{
+        //   this.screenTip = false
+        // },500)
       },500)
 
     },

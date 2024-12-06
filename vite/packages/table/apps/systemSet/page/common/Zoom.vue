@@ -83,7 +83,7 @@
 import { mapWritableState } from "pinia";
 import { appStore } from "../../../../store";
 import { usePlat } from "../../../../ui/hooks/usePlat";
-
+import { screenStore } from "../../../../store/screen";
 export default {
   name: "ZoomUI",
   data() {
@@ -149,6 +149,7 @@ export default {
       this.newZoom = this.settings.zoomFactor;
       this.timeout = 10;
       this.showRestore = false;
+      this.screenTip = true
     },
     clearTimer() {
       clearInterval(this.timer);
@@ -190,6 +191,7 @@ export default {
   },
   computed: {
     ...mapWritableState(appStore, ["settings"]),
+    ...mapWritableState(screenStore, ["screenTip"]),
     fitWidth() {
       const width = Number(this.currentWidth);
       if (width < 800) {

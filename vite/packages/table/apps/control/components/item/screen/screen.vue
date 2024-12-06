@@ -2,10 +2,10 @@
   <div class="flex items-center w-full h-full">
     <div class="tab-list">
       
-      <div class="tab select relative" :style="{marginLeft: index>0?'8px':0}" v-for="(item, index) in screenList"
+      <div class="tab select relative xt-mask" :style="{marginLeft: index>0?'8px':0}" v-for="(item, index) in screenList"
       :key="index">
         <xt-mix-menu :menus="menuList" @mounted="currentIndex = index" :beforeCreateFn="beforeCreateFn">
-          <div class="flex items-center h-full" @click="setScreen(item)" style="flex-direction: column;">
+          <div class="flex items-center h-full" style="flex-direction: column;">
             <MyIcon icon="fluent:desktop-16-regular" width="24" height="24" color="rgba(255,255,255,0.85)" style="margin-top: 22px" />
             <span>{{ item.title }}</span>
             <div class="mask h-full w-full absolute"></div>
@@ -14,7 +14,7 @@
           </div>
         </xt-mix-menu>
       </div>
-      <div class="tab add"  v-if="screenList.length<3" :style="{marginLeft: screenList.length !== 0?'8px':0}" @click="add">
+      <div class="tab add xt-mask"  v-if="screenList.length<3" :style="{marginLeft: screenList.length !== 0?'8px':0}" @click="add">
         <MyIcon icon="fluent:add-20-filled" width="24" height="24" color="rgba(255,255,255,0.85)" />
       </div>
     </div>
@@ -100,11 +100,16 @@ export default {
       }
     },
     saveScreen(index){
-      this.screenList[index] = {
-        ...this.screenList[index],
-        ...this.currentScreen,
-      }
-      this.$message.success("写入成功");
+      window.$ui.confirm(`是否确定覆盖当前桌面记忆`, "", {
+        type: "warning",
+        ok: ()=>{
+          this.screenList[index] = {
+            ...this.screenList[index],
+            ...this.currentScreen,
+          }
+          this.$message.success("写入成功");
+        },
+      });
     },
 
   },
@@ -129,7 +134,7 @@ export default {
       flex-direction: column;
       cursor: pointer;
       font-size: 14px;
-      background: rgba(0,0,0,0.30);
+      // background: rgba(0,0,0,0.30);
       font-weight: 400;
       height: 100%;
       span{
