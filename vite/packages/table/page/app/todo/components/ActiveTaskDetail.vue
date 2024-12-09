@@ -60,9 +60,6 @@
           <span class="btn-content" v-else @click="toggleTop">
             <to-top-outlined /> 置顶
           </span>
-          <span class="btn-content">
-            <Icon icon="gengduo1" style="color:var(--secondary-text);font-size:20px"></Icon>
-          </span>
         </span>
       </div>
       <div class="detail-box">
