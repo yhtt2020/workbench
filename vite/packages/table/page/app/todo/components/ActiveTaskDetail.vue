@@ -67,7 +67,7 @@
       </div>
       <div class="detail-box">
         <div class="flex justify-between">
-          <a-row>
+          <div class="flex-1 width-0">
             <a-col class="flex items-center">
               <a-input
                 style="font-weight: 500;font-size: 16px;color:var(--primary-text)"
@@ -76,7 +76,7 @@
                 v-model:value="activeTask.title"
               ></a-input>
             </a-col>
-          </a-row>
+          </div>
           <div class="convert-editor btn-style">
             <!--             :hidden="!showFormatConvert"-->
             <a-button
