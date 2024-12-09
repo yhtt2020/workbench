@@ -87,7 +87,7 @@ async function runApp(uri) {
       isDir = stat.isDirectory();
       if (isDir) {
         console.log("执行路径D，文件夹", realPath);
-        cp.spawn("start", [require("path").normalize(realPath)], {
+        cp.spawn("start", ["\"\"","\""+require("path").normalize(realPath)+"\""], {
           detached: true,
           cwd: require("path").dirname(realPath),
           shell: true,
