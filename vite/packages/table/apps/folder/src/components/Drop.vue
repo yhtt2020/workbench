@@ -22,7 +22,7 @@ import { inject, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { nanoid } from "nanoid";
 import { useMouseInElement } from "@vueuse/core";
-
+import {message} from "ant-design-vue"
 import { myIcons } from "../../../../store/myIcons";
 import { useFolderStore } from "../store";
 import { useDeskStore } from "../../../../components/desk/store";
@@ -77,10 +77,13 @@ const handleDrop = async (dragEvent) => {
 
   if(props.stopDrop) { return }
 
-  console.log("拖拽元素放置 :>> ", dragEvent.dataTransfer);
+  console.log("拖拽元素放置 :>> ", dragEvent.dataTransfer.files);
   isEnterFolder.value = false;
   // 非自定义模式禁止图标组件添加
-  if (data.value.model !== "custom") return;
+  if (data.value.model !== "custom"){
+    message.error('仅支持自定义模式的文件夹拖放，请修改文件夹组件模式后再试。')
+    return;
+  }
 
   // 属于文件互相拖拽添加
   if (!isOutside.value && dragId.value && index.value != dragId.value) {

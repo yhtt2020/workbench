@@ -642,7 +642,7 @@ const updateBg = (val) => {
  * 刷新桌面数据
  */
 const refreshDeskApp = async () => {
-  if (customData.value.model == "custom") return;
+  if (customData.value.model === "custom") return;
 
   refreshState.value = true;
   const desktopApps = await ipc.sendSync("getDeskApps");
@@ -672,6 +672,7 @@ const refreshDeskApp = async () => {
   });
   setTimeout(() => {
     refreshState.value = false;
+    message.success('更新成功')
   }, 1000);
 };
 function handleClick(e) {
