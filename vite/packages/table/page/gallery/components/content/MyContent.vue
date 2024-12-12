@@ -12,7 +12,7 @@
               <img :src="fileImageExtension(img) ? img.path : img.src" :data-source="img.path" :alt="img.resolution"   class="relative image-item pointer" />
             </xt-preview-img>
 
-            <video class="relative image-item pointer"  :src="img.srcProtocol"  @mouseenter="continuePlay($event)" @mouseleave="stopPlay($event)">
+            <video v-else class="relative image-item pointer"  :src="img.srcProtocol"  @mouseenter="continuePlay($event)" @mouseleave="stopPlay($event)">
 
             </video>
 
