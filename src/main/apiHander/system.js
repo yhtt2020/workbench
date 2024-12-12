@@ -9,6 +9,7 @@ class system extends Base {
 
   bindIPC () {
 
+
     this.on('extractFileIcon', async (event, args) => {
       try {
         event.returnValue = await SystemHelper.extractFileIcon(args.uri)
@@ -33,6 +34,10 @@ class system extends Base {
 
     this.on('isDarkMode',(event,args)=>{
       event.returnValue = nativeTheme.themeSource
+    })
+    this.on('setLocalPaper',(event,args)=>{
+      console.log('setLocalPaper',args)
+      return require('wallpaper').set(args.uri.replace('file://',''))
     })
     this.on('setDarkMode',(event,args)=>{
       nativeTheme.themeSource = args.mode===true?'dark':'light'

@@ -8,6 +8,10 @@ const system = {
   setPaper (url) {
     ipc.send('downloadAndSetWallpaper', { url: url })
   },
+  setLocalPaper(uri){
+    ipcHelper.send('system', 'setLocalPaper', { uri: uri })
+  },
+
   /**
    * 提取文件的图标
    * @param uri

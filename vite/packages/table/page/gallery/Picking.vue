@@ -75,8 +75,8 @@
                   <xt-preview-img :imgList="imagesList" :index="index">
                     <img
                       class="image-item pointer"
-                      :src="img.src"
-                      :data-source="img.path"
+                      :src="img.path"
+                      :data-source="img.src"
                       :alt="img.resolution"
                       style="position: relative"
                     />
@@ -192,6 +192,7 @@ import { usePlat } from "../../ui/hooks/usePlat";
 import PickDropDetail from "./components/content/PickDropDetail.vue";
 import GradeSmallTip from "../../components/GradeSmallTip.vue";
 import MinSelect from "./components/select/MinSelect.vue";
+import paperHelper from "./components/content/paperHelper";
 
 let fs, path;
 if (usePlat("client")) {
@@ -261,7 +262,7 @@ export default {
     /**获取图片路径**/
     imagesList() {
       return this.pickImageData.map((item) => {
-        return item.path;
+        return item.src;
       });
     },
 
@@ -293,12 +294,12 @@ export default {
     ...mapActions(paperStore, ["removeToMyPaper"]),
     ...mapActions(appStore, ["setBackgroundImage"]),
 
-    /**收藏**/ 
+    /**收藏**/
     addToMy(img) {
       this.removeToMyPaper(img);
     },
 
-    /**设置壁纸**/ 
+    /**设置壁纸**/
     setAppPaper(img) {
       // if (this.modalParams?.independent) {
        this.$emit('updateIndependentBg',img);
@@ -311,25 +312,12 @@ export default {
       });
     },
 
-    /**设置系统桌面壁纸**/ 
+    /**设置系统桌面壁纸**/
     setDesktopPaper(img) {
-      window.$ui.confirm(
-        "确定将此壁纸设置为系统桌面壁纸？注意，此处设置不是工作台的壁纸。",
-        "",
-        {
-          index: 100010,
-          ok: () => {
-            message.info("正在为您下载并设桌面壁纸");
-            tsbApi.system.setPaper(img.path);
-          },
-          no: () => {},
-          noText: "取消",
-          type: "link",
-        }
-      );
+      paperHelper.setDesktopPaper(img)
     },
 
-    /**下载壁纸**/ 
+    /**下载壁纸**/
     download(img) {
       if (this.settings.savePath === "") {
         window.$ui.confirm(
@@ -405,7 +393,7 @@ export default {
         if(res.status === 200){
           let pickImage = res.data.data;
           this.count = res.data.count;
-          let animations = ["ani-gray", "bowen", "ani-rotate"]; 
+          let animations = ["ani-gray", "bowen", "ani-rotate"];
           if (pickImage) {
             const mapPickImg = pickImage.map((img) => {
               if (img.thumburl !== null) {
@@ -414,8 +402,8 @@ export default {
                 );
                 const image = {
                   title: false,
-                  src: img.thumburl,
-                  path: img.imgurl,
+                  src: img.imgurl,
+                  path: img.thumburl,
                   resolution: img.size,
                   score: img.score,
                   no: img.no,
@@ -445,7 +433,7 @@ export default {
     },
 
 
-    /**下拉菜单切换数据**/ 
+    /**下拉菜单切换数据**/
     pickFilterChange(evt) {
       this.pickImageData = [];
       this.getWallpaperSourceList(99999999,false);
