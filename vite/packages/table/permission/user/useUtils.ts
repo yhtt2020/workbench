@@ -36,12 +36,15 @@ const gradeTableGenerate = (num) => {
 
   // 从lvSys对象中删除键为"lv0"的项，可能是不需要等级0或者它有特殊的含义
   delete lvSys["lv0"];
+  //提升等级上限
+  //lvSys[65]=[lvSys[64][0]+1,9999999999]
 
   // 返回构建好的等级系统对象
   return lvSys;
 };
 
 export const setLV = (userInfo) => {
+  const maxLevel=100
   if (!userInfo) {
     return false;
   }
@@ -57,10 +60,10 @@ export const setLV = (userInfo) => {
   lvInfo.lv = userInfo.onlineGradeExtra.lv;
 
   // 调用gradeTableGenerate函数生成等级表格，并提取当前等级的数据
-  let current = gradeTableGenerate(64)[lvInfo.lv];
+  let current = gradeTableGenerate(maxLevel)[lvInfo.lv];
 
   // 提取下一个等级的数据
-  let section = gradeTableGenerate(64)[lvInfo.lv + 1];
+  let section = gradeTableGenerate(maxLevel)[lvInfo.lv + 1];
 
   // 计算用户达到下一个等级还需要的分钟数
   let remain = section[0] * 60 - userInfo.onlineGradeExtra.minutes;
