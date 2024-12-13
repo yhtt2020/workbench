@@ -1,6 +1,6 @@
 <template>
   <teleport to='body'>
-    <Modal v-model:visible="editVisible" v-if="editVisible" :blurFlag="true" style="z-index: 750;">
+    <Modal v-model:visible="editVisible" v-if="editVisible" :blurFlag="true" style="z-index: 1011;">
       <div class="flex flex-col" style="width: 500px;height: 250px;">
         <div class="flex items-center justify-center w-full h-16 py-4 px-4" style="position: relative;">
           <span class="xt-text xt-font font-16 font-400">编辑订单</span>
