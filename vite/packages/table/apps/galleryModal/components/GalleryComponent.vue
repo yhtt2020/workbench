@@ -82,17 +82,16 @@ const updateBg = (img) => {
     return;
   }
   // 无壁纸
-  queryRef.value.show(img.srcProtocol||img.path|| img.src)
+  queryRef.value.show(img.srcProtocol|| img.src||img.path)
   return;
 };
 const updateIndependentBg = (img) => {
   if (img.srcProtocol) {
     proxy.$bus.emit("independentBg", `file://${img.src}`);
   } else {
-    proxy.$bus.emit("independentBg", img.path);
+    proxy.$bus.emit("independentBg", img.src);
   }
 };
-
 
 const { pageStatus } = toRefs(props);
 </script>

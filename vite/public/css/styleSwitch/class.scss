@@ -74,6 +74,10 @@ img {
 .xt-bg-2 {
   background: var(--secondary-bg) !important;
 }
+// 更次要的背景色，可以显示出次要按钮
+.xt-bg-3 {
+  background: var(--third-bg) !important;
+}
 
 // 弹窗背景色
 .xt-modal {

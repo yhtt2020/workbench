@@ -35,7 +35,7 @@
           :class="isModal ? 'mr-3' : ''"
           :zIndex="100001"
         >
-          <PickDropDetail :isModal="isModal" style="width: 350px;" @emitPick="pickFilterChange" />
+          <PickDropDetail :isModal="isModal" style="width: 350px;" @emitPick="pickFilterChange"/>
         </xt-dropdown>
       </div>
     </div>
@@ -45,7 +45,7 @@
       <!-- 加载状态 -->
       <template v-if="isLoading">
         <div style="display: flex; align-items: center; justify-content: center">
-          <a-spin />
+          <a-spin/>
         </div>
       </template>
 
@@ -59,115 +59,115 @@
       >
         <div style="height: 8px"></div>
 
-          <a-row :gutter="[16, 16]" id="pick-images" ref="pickRef">
-            <a-col
-              class="image-wrapper"
-              v-for="(img, index) in pickImageData"
-              :span="6"
-            >
-              <div class="w-full h-full pointer pick-paper">
-                <xt-mix-menu
-                  :menus="pickPaperMenu"
-                  fn="callBack"
-                  @mounted="this.currentPaper = img"
-                  :stopPropagation="false"
-                >
-                  <xt-preview-img :imgList="imagesList" :index="index">
-                    <img
-                      class="image-item pointer"
-                      :src="img.path"
-                      :data-source="img.src"
-                      :alt="img.resolution"
-                      style="position: relative"
-                    />
-                  </xt-preview-img>
-                  <div class="absolute flex top-1 right-3">
-                    <xt-button
-                      :w="isModal ? 32 : 40"
-                      :h="isModal ? 32 : 40"
-                      class="mr-2 xt-bg-t-3 img-button"
-                      style="border-radius: 8px; opacity: 0"
-                      @click="download(img)"
-                      v-if="!isWeb"
-                    >
+        <a-row :gutter="[16, 16]" id="pick-images" ref="pickRef">
+          <a-col
+            class="image-wrapper"
+            v-for="(img, index) in pickImageData"
+            :span="6"
+          >
+            <div class="w-full h-full pointer pick-paper">
+              <xt-mix-menu
+                :menus="pickPaperMenu"
+                fn="callBack"
+                @mounted="this.currentPaper = img"
+                :stopPropagation="false"
+              >
+                <xt-preview-img :imgList="imagesList" :index="index">
+                  <img
+                    class="image-item pointer"
+                    :src="img.path"
+                    :data-source="img.src"
+                    :alt="img.resolution"
+                    style="position: relative"
+                  />
+                </xt-preview-img>
+                <div class="absolute flex top-1 right-3">
+                  <xt-button
+                    :w="isModal ? 32 : 40"
+                    :h="isModal ? 32 : 40"
+                    class="mr-2 xt-bg-t-3 img-button"
+                    style="border-radius: 8px; opacity: 0"
+                    @click="download(img)"
+                    v-if="!isWeb"
+                  >
+                    <div class="flex items-center justify-center">
+                      <xt-new-icon
+                        icon="fluent:arrow-download-16-filled"
+                        :size="isModal ? 16 : 20"
+                        :color="'var(--active-text)'"
+                      ></xt-new-icon>
+                    </div>
+                  </xt-button>
+                  <xt-web-link-button v-else class="img-button" style="opacity: 0" :url="img.src">
+                    <template #a-button>
                       <div class="flex items-center justify-center">
                         <xt-new-icon
                           icon="fluent:arrow-download-16-filled"
-                          :size="isModal ? 16 : 20"
+                          :size="20"
                           :color="'var(--active-text)'"
                         ></xt-new-icon>
                       </div>
-                    </xt-button>
-                    <xt-web-link-button v-else class="img-button" style="opacity: 0" :url="img.src">
-                      <template #a-button>
-                        <div class="flex items-center justify-center">
-                          <xt-new-icon
-                            icon="fluent:arrow-download-16-filled"
-                            :size="20"
-                            :color="'var(--active-text)'"
-                          ></xt-new-icon>
-                        </div>
-                      </template>
-                    </xt-web-link-button>
+                    </template>
+                  </xt-web-link-button>
 
-                    <xt-button
-                      :w="isModal ? 32 : 40"
-                      :h="isModal ? 32 : 40"
-                      class="mr-2 xt-bg-t-3 img-button"
-                      style="border-radius: 8px; opacity: 0"
-                      @click="addToMy(img)"
-                      :style="
+                  <xt-button
+                    :w="isModal ? 32 : 40"
+                    :h="isModal ? 32 : 40"
+                    class="mr-2 xt-bg-t-3 img-button"
+                    style="border-radius: 8px; opacity: 0"
+                    @click="addToMy(img)"
+                    :style="
                         isInMyPapers(img) ? { opacity: '1' } : { opacity: '0' }
                       "
-                    >
-                      <div class="flex items-center justify-center">
-                        <xt-new-icon
-                          icon="fluent:star-16-filled"
-                          v-if="isInMyPapers(img)"
-                          :size="isModal ? 16 : 20"
-                          :color="'var(--warning)'"
-                        ></xt-new-icon>
-                        <xt-new-icon
-                          icon="fluent:star-16-filled"
-                          v-else
-                          :size="isModal ? 16 : 20"
-                          :color="'var(--active-text)'"
-                        ></xt-new-icon>
-                      </div>
-                    </xt-button>
-                  </div>
-                  <div
-                    class="absolute"
-                    style="top: 50%; left: 50%; transform: translate(-50%, -50%)"
                   >
-                    <xt-button
-                      w="100"
-                      :h="isModal ? 32 : 40"
-                      class="mr-2 xt-bg-t-3 img-button"
-                      style="border-radius: 8px; opacity: 0"
-                      @click="setAppPaper(img)"
-                    >
-                      <div class="flex items-center justify-center">
-                        <xt-new-icon
-                          icon="fluent:checkmark-circle-16-filled"
-                          :size="isModal ? 16 : 20"
-                          class="mr-1"
-                          :color="'var(--active-text)'"
-                        ></xt-new-icon>
-                        <span
-                          :class="
+                    <div class="flex items-center justify-center">
+                      <xt-new-icon
+                        icon="fluent:star-16-filled"
+                        v-if="isInMyPapers(img)"
+                        :size="isModal ? 16 : 20"
+                        :color="'var(--warning)'"
+                      ></xt-new-icon>
+                      <xt-new-icon
+                        icon="fluent:star-16-filled"
+                        v-else
+                        :size="isModal ? 16 : 20"
+                        :color="'var(--active-text)'"
+                      ></xt-new-icon>
+                    </div>
+                  </xt-button>
+                </div>
+                <div
+                  class="absolute"
+                  style="top: 50%; left: 50%; transform: translate(-50%, -50%)"
+                >
+                  <xt-button
+                    w="100"
+                    :h="isModal ? 32 : 40"
+                    class="mr-2 xt-bg-t-3 img-button"
+                    style="border-radius: 8px; opacity: 0"
+                    @click="showSetModal(img)"
+                  >
+                    <div class="flex items-center justify-center">
+                      <xt-new-icon
+                        icon="fluent:checkmark-circle-16-filled"
+                        :size="isModal ? 16 : 20"
+                        class="mr-1"
+                        :color="'var(--active-text)'"
+                      ></xt-new-icon>
+                      <span
+                        :class="
                             isModal ? 'font-14 font-400' : 'font-16 font-400'
                           "
-                          class="xt-active-text xt-font"
-                          >设为壁纸</span
-                        >
-                      </div>
-                    </xt-button>
-                  </div>
-                </xt-mix-menu>
-              </div>
-            </a-col>
-          </a-row>
+                        class="xt-active-text xt-font"
+                      >设为壁纸</span
+                      >
+                    </div>
+                  </xt-button>
+                </div>
+              </xt-mix-menu>
+            </div>
+          </a-col>
+        </a-row>
 
         <div style="height: 16px"></div>
       </XtScrollbar>
@@ -176,18 +176,18 @@
 </template>
 
 <script>
-import { mapActions, mapWritableState } from "pinia";
-import { pickPaperStore } from "./store/PickPaperStore";
-import { paperStore } from "../../store/paper";
+import {mapActions, mapWritableState} from "pinia";
+import {pickPaperStore} from "./store/PickPaperStore";
+import {paperStore} from "../../store/paper";
 // import axios from "axios";
-import { formatDateTime, isInMyPapers, paperDownload } from "./libs/utils";
-import { appStore } from "../../store";
+import {formatDateTime, isInMyPapers, paperDownload} from "./libs/utils";
+import {appStore} from "../../store";
 // import browser from "../../js/common/browser";
 // import { taskStore } from "../../apps/task/store";
-import { message } from "ant-design-vue";
-import { paperGet } from "../../js/axios/request";
-import { completeTask } from "../../apps/task/task";
-import { usePlat } from "../../ui/hooks/usePlat";
+import {message} from "ant-design-vue";
+import {paperGet} from "../../js/axios/request";
+import {completeTask} from "../../apps/task/task";
+import {usePlat} from "../../ui/hooks/usePlat";
 
 import PickDropDetail from "./components/content/PickDropDetail.vue";
 import GradeSmallTip from "../../components/GradeSmallTip.vue";
@@ -220,7 +220,7 @@ export default {
     return {
       isLoading: false,
       pickImageData: [],
-      options: { url: "data-source" },
+      options: {url: "data-source"},
       currentPaper: null,
       settingsScroller: {
         useBothWheelAxes: true,
@@ -255,8 +255,8 @@ export default {
     };
   },
 
-  computed:{
-    ...mapWritableState(pickPaperStore, ["no","cateHowValue","cateWhatValue","orderValue","paperApi"]),
+  computed: {
+    ...mapWritableState(pickPaperStore, ["no", "cateHowValue", "cateWhatValue", "orderValue", "paperApi"]),
     ...mapWritableState(paperStore, ["settings"]),
 
     /**获取图片路径**/
@@ -275,14 +275,14 @@ export default {
   inject: ["modalParams"],
 
   mounted() {
-    this.getWallpaperSourceList(99999999,false);
-    $("#pick-wrapper").scroll(()=>{
-      let currentTop =  $("#pick-wrapper").scrollTop() + $("#pick-wrapper").height() + 20 ;
+    this.getWallpaperSourceList(99999999, false);
+    $("#pick-wrapper").scroll(() => {
+      let currentTop = $("#pick-wrapper").scrollTop() + $("#pick-wrapper").height() + 20;
       let topVisible = currentTop >= $("#pick-images").prop("scrollHeight");
-      if(topVisible && this.isLoading === false){
+      if (topVisible && this.isLoading === false) {
         // 将返回数据中最后一条的 no 值减1作为下次请求的 no 参数，即可获取下一页数据
         let newNo = this.pickImageData[this.pickImageData.length - 1]?.no - 1;
-        this.getWallpaperSourceList(newNo,true);
+        this.getWallpaperSourceList(newNo, true);
       }
     })
   },
@@ -300,16 +300,10 @@ export default {
     },
 
     /**设置壁纸**/
-    setAppPaper(img) {
-      // if (this.modalParams?.independent) {
-       this.$emit('updateIndependentBg',img);
-        return;
-      // }
-      message.info("正在为您设置壁纸");
-      this.setBackgroundImage(img);
-      completeTask("m0201", () => {
-        this.$bus.emit("closePaperModal");
-      });
+    showSetModal(img) {
+      console.log(img,'需要设置的img')
+      this.$emit('updateIndependentBg', img);
+      return;
     },
 
     /**设置系统桌面壁纸**/
@@ -328,7 +322,8 @@ export default {
             ok: async () => {
               await this.queryStart();
             },
-            no: () => {},
+            no: () => {
+            },
             noText: "取消",
             type: "link",
           }
@@ -366,31 +361,30 @@ export default {
      * @param no 截止序号，用于分页的关键参数。注：当 order 值为 random 时，该参数无效。
      * 例：将返回数据中最后一条的 no 值减1作为下次请求的 no 参数，即可获取下一页数据。
      * **/
-    getWallpaperSourceList(no,flag){
-      if(flag === false) this.isLoading = true;
+    getWallpaperSourceList(no, flag) {
+      if (flag === false) this.isLoading = true;
       // 判断当前的排序是否为随机,如果是,那么no这个参数会失效
-      if(this.orderValue === 'random'){
+      if (this.orderValue === 'random') {
         let data = {
           order: Date.now(),
-          catehow:this.cateHowValue,
-          catewhat:this.cateWhatValue,
-          no:no,
+          catehow: this.cateHowValue,
+          catewhat: this.cateWhatValue,
+          no: no,
         }
         this.getPaperList(data);
-      }
-      else {
+      } else {
         let newData = {
-          order:this.orderValue,
-          catehow:this.cateHowValue,
-          catewhat:this.cateWhatValue,
-          no:no,
+          order: this.orderValue,
+          catehow: this.cateHowValue,
+          catewhat: this.cateWhatValue,
+          no: no,
         }
         this.getPaperList(newData);
       }
     },
-    getPaperList(data){
-      paperGet(`/${this.paperApi}/v3`, {...data}).then((res)=>{
-        if(res.status === 200){
+    getPaperList(data) {
+      paperGet(`/${this.paperApi}/v3`, {...data}).then((res) => {
+        if (res.status === 200) {
           let pickImage = res.data.data;
           this.count = res.data.count;
           let animations = ["ani-gray", "bowen", "ani-rotate"];
@@ -413,30 +407,29 @@ export default {
               }
             });
             this.isLoading = false;
-            if(this.pickImageData.length !== 0){
-              this.pickImageData =  this.pickImageData.concat(mapPickImg);
-            }
-            else {
+            if (this.pickImageData.length !== 0) {
+              this.pickImageData = this.pickImageData.concat(mapPickImg);
+            } else {
               this.pickImageData = mapPickImg;
             }
           }
         }
       })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => {
-        this.$nextTick(() => {
-          this.isLoading = false;
+        .catch((error) => {
+          console.error(error);
+        })
+        .finally(() => {
+          this.$nextTick(() => {
+            this.isLoading = false;
+          });
         });
-      });
     },
 
 
     /**下拉菜单切换数据**/
     pickFilterChange(evt) {
       this.pickImageData = [];
-      this.getWallpaperSourceList(99999999,false);
+      this.getWallpaperSourceList(99999999, false);
     },
   },
 };
@@ -450,9 +443,11 @@ export default {
     }
   }
 }
+
 .xt-bg-t-3 {
   background: rgba(00, 00, 00, 0.4) !important;
 }
+
 :deep(.ant-select-arrow) {
   color: var(--primary-text) !important;
 }

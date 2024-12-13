@@ -114,6 +114,7 @@ import Global from './apps/global/Global.vue'
 import { usePlat } from './ui/hooks/usePlat'
 import { useLogin } from '../table/permission/user/useLogin'
 import DeskBg from './components/DeskBg.vue'
+import paperHelper from "./page/gallery/components/content/paperHelper";
 notification.config({
   top: '70px',//设置notification默认距离顶部位置
   rtl: false,
@@ -148,8 +149,11 @@ export default {
     }
   },
 
+  unmounted() {
+    this.unbindPaperBus()
+  },
   async mounted () {
-
+    this.bindPaperBus()
     if(!usePlat('client')){
       document.body.classList.add('web')
     }else{
@@ -240,6 +244,15 @@ export default {
     ...mapActions(cardStore, ['sortClock']),
     ...mapActions(codeStore, ['verify']),
     ...mapActions(steamUserStore, ['setUserData', 'setSteamLoginData', 'setGameList', 'addGameDetail', 'onRefreshToken']),
+    bindPaperBus(){
+      console.log('绑定时间')
+      this.$bus.on("setDeskBg", (val) => {
+        paperHelper.setDesktopPaperFromUrl(val)
+      });
+    },
+    unbindPaperBus(){
+      this.$bus.off('setDeskBg')
+    },
     KeyDown (event) {
       if (event.keyCode === 122) {
         this.toggleFullScreen()
