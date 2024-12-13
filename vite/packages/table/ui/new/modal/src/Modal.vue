@@ -289,7 +289,7 @@ const oldY = ref(0);
 const modalWidth = ref(0);
 const modalHeight = ref(0);
 // 弹窗层级
-const INDEX = 99999;
+const INDEX = 999;
 const currentModalIndex = ref(0);
 
 // 旧弹窗大小

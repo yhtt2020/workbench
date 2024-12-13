@@ -1,6 +1,6 @@
 <template>
  <teleport to='body'>
-  <xt-modal v-if="settingVisible" v-model="settingVisible" :index="1001" title="「我的快递」设置"  :blurFlag="true" :footer="false" >
+  <xt-modal v-if="settingVisible" v-model="settingVisible" :index="200" title="「我的快递」设置"  :blurFlag="true" :footer="false" >
     <div class="xt-text mb-4" style="width: 500px;height:100%;">
       <vue-custom-scrollbar :settings="settingsScroller" style="height:480px;">
         <SettingDetail />

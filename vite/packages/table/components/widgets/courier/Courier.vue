@@ -50,7 +50,7 @@
           </template>
         </template>
         <teleport to='body'>
-          <xt-modal v-if="courierModalVisible" v-model="courierModalVisible" title="" :footer="false"  :header="false" :index="200">
+          <xt-modal v-if="courierModalVisible" v-model="courierModalVisible" title="" :footer="false"  :header="false" :index="999">
             <LargeCourierDetail @change-route="changeRoute" :route="showCourierDetail?'detail':'list'" :mode="modalMode" @close="courierModalVisible = false;getDbCourier()"/>
 <!--            <LogisticsDetail v-else :detail="currentDetail" @close="closeCourierDetail" @back="backAllCoutiers"/>-->
           </xt-modal>

@@ -1,16 +1,16 @@
 <template>
   <teleport to='body'>
-   <Modal v-if="modalVisible" v-model:visible="modalVisible" :blurFlag="true" style="z-index: 1010;">
+   <Modal v-if="modalVisible" v-model:visible="modalVisible" :blurFlag="true" style="z-index: 9999999;">
      <div class="flex px-5 my-3.5" style="width: 400px;">
       <CourierIcon icon="ant-design:info-circle-filled" style="font-size: 1.5rem;color: var(--warning);"/>
-      <div class="flex flex-col ml-4 justify-between" style="width: 316px;">
+      <div class="flex flex-col ml-4 justify-between" style="width: 250px;">
        <span class="xt-text font-16  xt-font font-400">确定解除关联吗？</span>
        <span class="xt-text-2 my-4 xt-font font-16 font-400">
-        解除后将不再同步快递包裹列表，你可以选择将当前已经同步的快递转移到自定义快递进行后续物流跟踪。
+        解除后将不再同步快递包裹列表。<!--，你可以选择将当前已经同步的快递转移到自定义快递进行后续物流跟踪。-->
        </span>
        <div class="flex items-center justify-between">
-        <a-checkbox v-model:checked="settings.customCourier">转到自定义快递</a-checkbox>
-        <div class="flex">
+<!--   //todo增加转入自定义快递     <a-checkbox v-model:checked="settings.customCourier">转到自定义快递</a-checkbox>-->
+        <div class="flex item-content">
          <xt-button w="64" h="40" @click="modalVisible = false">取消</xt-button>
          <xt-button w="64" h="40" class="ml-4" type="theme" @click="ok">确定</xt-button>
         </div>
