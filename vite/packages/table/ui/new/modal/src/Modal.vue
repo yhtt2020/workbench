@@ -40,7 +40,7 @@
         <div v-else class="flex w-full h-full overflow-hidden">
           <!-- 左侧 -->
           <nav class="h-full">
-            <slot name="nav"> </slot>
+            <slot name="nav"></slot>
           </nav>
           <div class="flex flex-col flex-1 w-full">
             <!-- 头部 -->
@@ -53,7 +53,7 @@
               >
                 <!-- 标题左侧 -->
                 <div class="z-20 flex items-center flex-1">
-                  <slot name="header-left"> </slot>
+                  <slot name="header-left"></slot>
                 </div>
                 <!-- 标题中间 -->
                 <div
@@ -65,7 +65,7 @@
                 </div>
                 <!-- 标题右侧 -->
                 <div class="right-0 z-20 flex items-center">
-                  <slot name="header-right"> </slot>
+                  <slot name="header-right"></slot>
                   <!-- 最小化 -->
                   <xt-button
                     v-if="min"
@@ -75,7 +75,7 @@
                     radius="8"
                     @click="minimize"
                   >
-                    <xt-ify-icon icon="fluent:subtract-16-regular" />
+                    <xt-ify-icon icon="fluent:subtract-16-regular"/>
                   </xt-button>
                   <!-- 最大化 -->
                   <xt-button
@@ -139,7 +139,7 @@
               :class="mainClass"
             >
               <slot>
-                <McDonalds />
+                <McDonalds/>
               </slot>
             </main>
             <!-- 底部 -->
@@ -154,7 +154,8 @@
                   class="ml-3"
                   type="theme"
                   @click="onOk()"
-                  >{{ okName }}</xt-button
+                >{{ okName }}
+                </xt-button
                 >
               </footer>
             </slot>
@@ -206,27 +207,28 @@ import {
   computed,
   getCurrentInstance,
 } from "vue";
-import { useGlobalStore } from "../../../../apps/global/store";
+import {useGlobalStore} from "../../../../apps/global/store";
 // import { vElementSize } from "../../drag/src/hooks/useElementSize";
-import { nanoid } from "nanoid";
+import {nanoid} from "nanoid";
 import PerfectScrollbar from "perfect-scrollbar";
-import { ModalProps } from "./types";
-import { storeToRefs } from "pinia";
+import {ModalProps} from "./types";
+import {storeToRefs} from "pinia";
+
 const globalStore = useGlobalStore();
-const { windowHeight, windowWidth } = storeToRefs(globalStore);
-import { useNavigationStore } from "../../../../components/desk/navigationBar/navigationStore";
+const {windowHeight, windowWidth} = storeToRefs(globalStore);
+import {useNavigationStore} from "../../../../components/desk/navigationBar/navigationStore";
 
 const navStore = useNavigationStore();
-const { currentMainH } = storeToRefs(navStore);
+const {currentMainH} = storeToRefs(navStore);
 
-const { proxy }: any = getCurrentInstance();
+const {proxy}: any = getCurrentInstance();
 // 类型注释在types.ts文件中
 const props = withDefaults(defineProps<ModalProps>(), {
   modelValue: false,
   title: "",
   noName: "取消",
   okName: "确认",
-  index: 1000,
+  index: 999,
   maskIndex: 100,
   mask: true,
   nav: false,
@@ -239,7 +241,7 @@ const props = withDefaults(defineProps<ModalProps>(), {
   beforeMount: () => true,
   beforeUnmount: () => true,
   custom: false,
-  scrollbarStyle: { paddingRight: "0px", paddingLeft: "0px" },
+  scrollbarStyle: {paddingRight: "0px", paddingLeft: "0px"},
   type: null,
   min: false,
   max: false,
@@ -250,7 +252,7 @@ const props = withDefaults(defineProps<ModalProps>(), {
   isMaximize: false,
   isScrollbar: true,
 });
-const { esc, modelValue, beforeMount, beforeUnmount, type } = toRefs(props);
+const {esc, modelValue, beforeMount, beforeUnmount, type} = toRefs(props);
 
 const emits = defineEmits([
   // 双向绑定弹窗显示状态
@@ -468,7 +470,7 @@ const initPosition = () => {
   intervalId = setInterval(() => {
     // 数据未加载完成时
     if (windowHeight.value <= 0 || modalHeight.value <= 0) return;
-    const { left, top } = getModalPosition.value;
+    const {left, top} = getModalPosition.value;
     y.value = top;
     x.value = left;
     oldX.value = left;
@@ -581,7 +583,7 @@ const doubleClick = (event: any) => {
 };
 
 /** 模态框获取焦点 */
-const getModalFouls = () => {
+const getModalFouls = (val) => {
   // 如果当前弹窗已经是焦点弹窗则不处理
   if (currentModalIndex.value == INDEX) return;
   // 先通知所有弹窗移除焦点
@@ -589,7 +591,7 @@ const getModalFouls = () => {
 
   // 提升当前弹窗层级
   setTimeout(() => {
-    currentModalIndex.value = INDEX;
+    currentModalIndex.value = val||INDEX;
   }, 3);
 };
 
@@ -623,9 +625,8 @@ const init = () => {
   proxy.$bus.on("modalBlur", () => {
     currentModalIndex.value = props.index;
   });
+  getModalFouls(props.index)
 
-  // 获取弹窗焦点
-  getModalFouls();
 
   // 属于单例弹窗
   if (props.type) {
@@ -666,7 +667,8 @@ const handleKeyDown = (event) => {
   }
 };
 // 挂载前
-onBeforeMount(() => {});
+onBeforeMount(() => {
+});
 
 // 挂载后
 onMounted(() => {

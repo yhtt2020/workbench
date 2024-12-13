@@ -14,7 +14,7 @@
                    class="relative image-item pointer"/>
             </xt-preview-img>
 
-            <video v-else class="relative image-item pointer" :src="img.srcProtocol" @mouseenter="continuePlay($event)"
+            <video muted v-else class="relative image-item pointer" :src="img.srcProtocol" @mouseenter="continuePlay($event)"
                    @mouseleave="stopPlay($event)">
 
             </video>
