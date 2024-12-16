@@ -24,7 +24,7 @@
       </div>
       <!--  搜索栏 随机 颜色选择 -->
       <div class="flex pt-3 pl-3 pr-3 action-search" style="justify-content: space-between;"
-           v-if="['icon','emoji'].includes(menus[selIndex])">
+           v-if="menus[selIndex]==='icon'">
         <a-input
           style="height:40px;background: var(--secondary-bg);
             color: var(--primary-text);
@@ -42,7 +42,7 @@
           </xt-button>
         </a-tooltip>
         <!-- 颜色选择 -->
-        <div v-if="menus[selIndex] == 'icon'" class="flex items-center justify-center ml-3 pointer"
+        <div class="flex items-center justify-center ml-3 pointer"
              style="width: 40px;height:40px;background: var(--secondary-bg);border-radius: 10px;position: relative;"
              @click="isShowBgColor=!isShowBgColor">
           <a-tooltip>
@@ -80,7 +80,7 @@
 
 
       <!-- 渲染的列表  需要将show 换成 if-->
-      <div v-if="menus[selIndex]=='emoji'" class="flex flex-wrap pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar"
+      <div v-if="menus[selIndex]==='emoji' || menus[selIndex] === 'icon'" class="flex flex-wrap pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar"
            style="height: 290px;">
         <div v-for="(item,index) in search" :key="index" @click="onSelectIcon(item.name)"
              class="flex items-center justify-center mt-2 ml-2 overflow-hidden pointer xt-bg-2"
@@ -89,14 +89,14 @@
             <template #title>{{ item.alias }}</template>
             <a-avatar v-if="item.name != 'goods'" :src="cdnUrl(`/icon_select/${menus[selIndex]}/${item.name}.svg`)"
                       :alt="item.alias" width="32" height="32"
-                      :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'',transform:menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>
+                      :style="{'filter': menus[selIndex] === 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'',transform:menus[selIndex] === 'icon'?'translateX(-80px)':''}"></a-avatar>
             <a-avatar v-else :src="cdnUrl(`/goods_select/${item.name}.svg`)" :alt="item.alias" width="32"
                       height="32"></a-avatar>
           </a-tooltip>
         </div>
       </div>
       <!--  截图    -->
-      <div v-if="menus[selIndex]=='截图'" class="flex flex-col flex-wrap items-center px-6"
+      <div v-else-if="menus[selIndex]==='截图'" class="flex flex-col flex-wrap items-center px-6"
            style="height: 290px;">
         <div v-if="!captureImg" class="flex items-center justify-center pointer " @click="startCapture()"
              style="margin-top: 98px;height: 126px;width: 126px;background: var(--secondary-bg);border: 1px dashed rgba(255,255,255,0.1);border-radius: 6px;">
