@@ -16,6 +16,7 @@ import { appsStore } from "../../store/apps";
 import { useAppCenterStore } from "../../apps/appCenter/src/store";
 import {ActionHandler} from "../../js/action/actionHandler";
 import {message} from "ant-design-vue";
+import {useNavigationStore} from "../../components/desk/navigationBar/navigationStore";
 
 // @ts-ignore
 
@@ -111,8 +112,10 @@ async function runApp(uri) {
  *
  * @param type
  * @param value
+ * @param router
+ * @param data 额外提供的完整参数
  */
-export const startApp = async (type, value, router?) => {
+export const startApp = async (type, value, router?,data?) => {
   if (type === "" || value === "") {
     console.warn("startApp :>> type or value 不能为空");
   }
@@ -172,7 +175,7 @@ export const startApp = async (type, value, router?) => {
     // 系统应用
     case "systemApp":
       // router.push({ name: value });
-      openSysApp(value, router);
+      openSysApp(value, router,data);
       break;
     // 不知道是什么场景
     case "localApp":
@@ -250,7 +253,7 @@ export const startApp = async (type, value, router?) => {
 };
 
 // 打开特殊系统应用，无需要通过路由打开的图标
-export const openSysApp = (value, router) => {
+export const openSysApp = (value,router, data) => {
   const useAppStore: any = appStore();
   const useTakeStore = taskStore();
   const usefavoStore = favoStore();
@@ -314,6 +317,7 @@ export const openSysApp = (value, router) => {
       break;
     case "home":
       useAppStore.settings.isCommunity = true;
+      useNavigationStore().jumpDesk = data.home||'';
       window.$ui.router.push({ name: value });
       break;
     case "ai":
