@@ -204,7 +204,7 @@ export default {
   computed: {
     ...mapWritableState(taskStore, ["taskFilter", "displayList", "tasks"]),
     ...mapWritableState(listStore, ["activeList", "lists"]),
-    
+
     notFinish() {
       return this.taskList.filter((item) => !item.completed);
     },
@@ -244,6 +244,7 @@ export default {
     },
   },
   async mounted() {
+    listStore()
     //初始化数据
     // await databaseStore().init();
     // databaseStore().$subscribe(() => {
@@ -252,51 +253,54 @@ export default {
     // if (this.customData?.id) {
     //   this.todoIndex = this.customData.id
     // }
-    if (this.customData?.currentTodo) {
-      this.selectTodo = this.customData.currentTodo;
-    }
-    this.listType = this.lists?.map((item, index) => {
-      return Object.assign({}, { title: item.title, nanoid: item.nanoid });
-    });
-    if (!this.listType.length)
-      this.selectTodo = { title: "个人", nanoid: "T00111" };
-    this.getTodoType(this.selectTodo);
-    if (this.customData.customSize === undefined) {
-      this.customData.customSize = "2x2";
-    }
+   setTimeout(()=>{
+     console.log(this.customData?.currentTodo,'currentTodo',this.lists,'this.list')
+     if (this.customData?.currentTodo) {
+       this.selectTodo = this.customData.currentTodo;
+     }
+     this.listType = this.lists?.map((item, index) => {
+       return Object.assign({}, { title: item.title, nanoid: item.nanoid });
+     });
+     if (!this.listType.length)
+       this.selectTodo = { title: "个人", nanoid: "T00111" };
+     this.getTodoType(this.selectTodo);
+     if (this.customData.customSize === undefined) {
+       this.customData.customSize = "2x2";
+     }
 
-    // 在社群成员桌面的场景下将尺寸切换操作进行屏蔽
-    if (this.options.disableEdit) {
-      this.sizeList = [];
-      this.toggleTodoList = [];
-    } else {
-      this.sizeList = [
-        { value: "2x2", name: "2x2" },
-        { value: "2x4", name: "2x4" },
-      ];
-      this.toggleTodoList = [
-        {
-          icon: "shezhi1",
-          title: "设置",
-          fn: () => {
-            this.openSettings = true;
-            this.$refs.todoSlot.visible = false;
-          },
-        },
-      ];
-    }
+     // 在社群成员桌面的场景下将尺寸切换操作进行屏蔽
+     if (this.options.disableEdit) {
+       this.sizeList = [];
+       this.toggleTodoList = [];
+     } else {
+       this.sizeList = [
+         { value: "2x2", name: "2x2" },
+         { value: "2x4", name: "2x4" },
+       ];
+       this.toggleTodoList = [
+         {
+           icon: "shezhi1",
+           title: "设置",
+           fn: () => {
+             this.openSettings = true;
+             this.$refs.todoSlot.visible = false;
+           },
+         },
+       ];
+     }
 
-    if(communityMember(this.desk?.communityNo)){
-      const target = {
-          customIndex:this.customIndex,
-          desk:this.desk
-        }
-        loadData("desk",target).then((rs)=>{
-          if(rs){
-            this.taskList =  Object.keys(rs).map(key => (rs[key]))
-          }
-        })
-    }
+     if(communityMember(this.desk?.communityNo)){
+       const target = {
+         customIndex:this.customIndex,
+         desk:this.desk
+       }
+       loadData("desk",target).then((rs)=>{
+         if(rs){
+           this.taskList =  Object.keys(rs).map(key => (rs[key]))
+         }
+       })
+     }
+   },3000)
   },
   methods: {
     ...mapActions(communityNavStore, ["isCommunityDesktop"]),
