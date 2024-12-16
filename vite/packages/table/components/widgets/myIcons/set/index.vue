@@ -140,10 +140,10 @@ const emits = defineEmits(["close", "update:modelValue", "save"]);
 const props = defineProps({
   modelValue: {},
   index: {
-    default: "1000",
+    default: "1010",
   },
   maskIndex: {
-    default: "999",
+    default: "888",
   },
 });
 const arr = ["internal", "default", "thinksky", "mob"];

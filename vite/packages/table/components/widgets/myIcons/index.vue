@@ -84,8 +84,8 @@
   <Set
     v-if="settingVisible"
     v-model="settingVisible"
+    :index="1000"
     @save="closeSet"
-    :mask="0"
   ></Set>
   <!-- 卡片弹窗 -->
   <ModelCard
