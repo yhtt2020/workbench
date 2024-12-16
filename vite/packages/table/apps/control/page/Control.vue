@@ -12,7 +12,7 @@
     <ControlBody />
 
     <!-- 分割线 -->
-    <div class="mt-2 mb-4 px-4" style="width:100%;">
+    <div class="mt-5 mb-4 px-4" style="width:100%;">
       <div class="w-full mx-auto xt-bb"></div>
     </div>
 
