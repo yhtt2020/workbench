@@ -6,7 +6,7 @@
         <div class="mt-2 mb-2 text-sm xt-text-2">
             当你有多个桌面时，你可以选择点击打开的默认桌面作为主页
         </div>
-        <xt-select v-model="defaultDesk" :list="deskList" :zIndex="99999999"></xt-select>
+        <xt-select v-model="defaultDesk" :list="deskList" :zIndex="99999"></xt-select>
     </div>
 </template>
 
@@ -27,12 +27,14 @@ const deskList = computed(() => {
 })
 
 const defaultDesk = ref('')
+const title=ref('')
 onMounted(()=>{
-    
     defaultDesk.value = props.editItem.home?.id ? props.editItem.home.id : deskList.value[0].value
 })
 watch(()=>defaultDesk.value,()=>{
-    props.editItem.home = {id:defaultDesk.value}
+    props.editItem.home = {id:defaultDesk.value,name:useCardStore.desks.find(desk=>{
+      return desk.id === defaultDesk.value
+      }).name}
 })
 </script>
 <style lang='scss' scoped></style>

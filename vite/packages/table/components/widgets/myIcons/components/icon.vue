@@ -14,7 +14,7 @@
       :boxH="bgH"
       :bg="bg"
       :r="r"
-      :style="{ borderRadius: '12px', background: bg }"
+      :style="{ borderRadius: '12px', background: bg ,padding:`10%`}"
       :iconStyle="{ borderRadius: r, ...imgStateStyle }"
       :class="''"
     />
@@ -120,22 +120,54 @@ export default {
     bgSize() {
       return this.getSizeValues(this.size).bgSize;
     },
+    imgW() {
+      let w = parseInt(this.getSizeValues(this.size).imgSize.width);
+      w = this.isIfy === "ify" ? w / 2 : w;
+      if(this.isIcon ){
+        w= w*0.6
+      }
+      if(this.isEmoji){
+        w= w*0.7
+      }
+      if(this.imgShape!=='square') {
+        return this.imgH
+      }
+      return w;
+    },
     // 为了适配新版
     imgH() {
       let h = parseInt(this.getSizeValues(this.size).imgSize.height);
       h = this.isIfy == "ify" ? h / 2 : h;
+      if(this.isIcon){
+        return h*0.6
+      }
+      if( this.isEmoji){
+        return h*0.7
+      }
       return h;
     },
-    imgW() {
-      let w = parseInt(this.getSizeValues(this.size).imgSize.width);
-      w = this.isIfy == "ify" ? w / 2 : w;
-      return w;
+    isIcon(){
+      return this.src.includes('icon_select/icon/')
     },
+    isEmoji(){
+      return this.src.includes('icon_select/emoji/')
+    },
+    isImg(){
+      return this.isIfy==='select' && !this.isIcon && !this.isEmoji
+    },
+
     bgW() {
       let w =
-        this.isIfy == "ify"
+        this.isIfy === "ify"
           ? parseInt(this.getSizeValues(this.size).imgSize.width)
           : parseInt(this.getSizeValues(this.size).bgSize.width);
+
+      if(this.imgShape==='square'){
+       w= this.isIfy === "ify"
+          ? parseInt(this.getSizeValues(this.size).imgSize.height)
+          : parseInt(this.getSizeValues(this.size).bgSize.height);
+      }
+      console.log(this.src)
       return w;
     },
     bgH() {
@@ -250,6 +282,7 @@ export default {
     startApp,
     // 单图标点击
     async iconClick(event) {
+      console.log('新版')
       if (event.ctrlKey && event.button === 0) {
         this.$emit("customEvent");
         return;
@@ -261,21 +294,14 @@ export default {
       }
 
       if (this.newIcon) {
-        console.log(this.newIcon, "open");
-        console.log("this.open.type :>> ", this.open.type);
-        console.log("this.open.value :>> ", this.open.value);
-        this.startApp(this.open.type, this.open.value, this.$router);
+        this.startApp(this.open.type, this.open.value, this.$router,this.open);
       } else if (this.open !== undefined && this.open.value !== "") {
-        console.log('type=card或者startapp条件')
-        // 链接
-        console.log("lianjie :>> ");
         if (this.open.type === "card") {
-          console.log("this.open.value :>> ", this.open.value);
           this.$emit("openCard");
           return;
         }
         // this.newOpenApp();
-        this.startApp(this.open.type, this.open.value, this.$router);
+        this.startApp(this.open.type, this.open.value, this.$router,this.open);
       } else if (this.link !== "") {
         // 其他应用
         this.openApp(this.linkValue);
@@ -283,6 +309,7 @@ export default {
     },
     // 复制来到 旧版打开app
     openApp() {
+      console.log('老板')
       if (typeof this.linkValue === "object" && this.linkValue.type) {
         switch (this.linkValue.type) {
           case "systemApp":

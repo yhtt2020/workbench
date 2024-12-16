@@ -27,9 +27,14 @@
     <div style="height: 50vh">
       <div style="width: 452px" v-if="currentTab == 'attribute'">
         <!--   系统类的app则不允许修改      -->
-        <xt-option-box v-if="['systemApp','lightApp','coolApp'].includes(edit.open.type) ">
-          <xt-text class="mb-3" center> 当前图标为「系统功能」类型。</xt-text>
-        </xt-option-box>
+        <template v-if="['systemApp','lightApp','coolApp'].includes(edit.open.type) ">
+          <xt-option-box>
+            <xt-text class="mb-3" center> 当前图标为「系统功能」类型。</xt-text>
+            {{ edit.open }}}
+          </xt-option-box>
+          <SelectHome v-if="edit.open.value === 'home'" :editItem="edit.open"></SelectHome>
+        </template>
+
         <template v-else>
           <!--    图标、app、快捷指令走这里       -->
           <xt-option-form :options="attributeOptions" :data="edit">
@@ -105,6 +110,7 @@ import {
   appearanceColorOptions,
 } from "./options";
 import {getHostAddress} from "../edit/hooks/getHostAddress";
+import SelectHome from "../../../desk/navigationBar/components/EditIcon/Children/SelectHome.vue";
 
 // 手动引入通用表单组件
 const Form = defineAsyncComponent(() =>
@@ -264,6 +270,15 @@ watch(
     console.log(newV, edit.value.open.type);
   }
 );
+watch(
+  () => edit.value.open.home,
+  (newV, oldV) => {
+    edit.value.titleValue = newV.name
+  },
+  {
+    deep:true
+  }
+);
 /**
  * 恢复默认图标
  */
@@ -277,7 +292,7 @@ const refreshIcon = () => {
  */
 const save = () => {
   console.log(" edit.value :>> ", edit.value);
-  emits("save", edit.value);
+  emits("save", {value: edit.value, home: edit.value.open.home});
   // fileSetVisible
   message.success("保存成功");
   visible.value = false;

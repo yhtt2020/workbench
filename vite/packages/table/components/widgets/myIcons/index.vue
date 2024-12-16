@@ -25,55 +25,55 @@
         :customData="customData"
         :desk="desk"
       >
-          <drag-and-follow
-            :isSelect="isSelect"
-            :length="this.iconsRefs.length"
-            @drag-end="handleDragEnd"
-            @drag-start="handleDragStart"
+        <drag-and-follow
+          :isSelect="isSelect"
+          :length="this.iconsRefs.length"
+          @drag-end="handleDragEnd"
+          @drag-start="handleDragStart"
+        >
+          <!-- 多图标组件 -->
+          <!-- <template
+            v-if="
+              customData.iconList !== undefined &&
+              customData.iconList.length > 1
+            "
           >
-            <!-- 多图标组件 -->
-            <!-- <template
-              v-if="
-                customData.iconList !== undefined &&
-                customData.iconList.length > 1
-              "
-            >
-              <div>
-                <icons
-                  v-model:width="customData.size.w"
-                  v-model:height="customData.size.h"
-                  :groupTitle="customData.groupTitle"
-                  :iconList="customData.iconList"
-                  :zoom="customData.zoom"
-                  @custom-event="handleCustomEvent"
-                  @disbandGroup="disbandGroup"
-                  @updateGroupTitle="updateGroupTitle"
-                  @deleteIcons="deleteIcons"
-                  @editIcons="editIcons"
-                  @dragAddIcon="dragAddIcon"
-                  @iconsRightClick="handleMenu()"
-                ></icons>
-              </div>
-            </template> -->
-            <!-- 单图标组件 -->
-            <!-- <template
-              v-else-if="
-                customData.iconList !== undefined &&
-                customData.iconList.length > 0
-              "
-            > -->
-            <icon
-              v-if="
+            <div>
+              <icons
+                v-model:width="customData.size.w"
+                v-model:height="customData.size.h"
+                :groupTitle="customData.groupTitle"
+                :iconList="customData.iconList"
+                :zoom="customData.zoom"
+                @custom-event="handleCustomEvent"
+                @disbandGroup="disbandGroup"
+                @updateGroupTitle="updateGroupTitle"
+                @deleteIcons="deleteIcons"
+                @editIcons="editIcons"
+                @dragAddIcon="dragAddIcon"
+                @iconsRightClick="handleMenu()"
+              ></icons>
+            </div>
+          </template> -->
+          <!-- 单图标组件 -->
+          <!-- <template
+            v-else-if="
+              customData.iconList !== undefined &&
+              customData.iconList.length > 0
+            "
+          > -->
+          <icon
+            v-if="
                 customData.iconList !== undefined &&
                 customData.iconList.length > 0
               "
-              :newIcon="customData.newIcon"
-              v-bind="customData?.iconList[0]"
-              @custom-event="handleCustomEvent"
-              @openCard="openCard"
-            ></icon>
-            <!-- </template> -->
-          </drag-and-follow>
+            :newIcon="customData.newIcon"
+            v-bind="customData?.iconList[0]"
+            @custom-event="handleCustomEvent"
+            @openCard="openCard"
+          ></icon>
+          <!-- </template> -->
+        </drag-and-follow>
       </xt-container>
     </droppable-area>
     <!-- 卡片核心 -->
@@ -107,37 +107,38 @@
   </XtDrawer> -->
 </template>
 <script>
-import { defineAsyncComponent } from "vue";
+import {defineAsyncComponent} from "vue";
 
-import { iconValidate } from "../../../apps/appCenter/src/views/developer/hooks/validate.ts";
+import {iconValidate} from "../../../apps/appCenter/src/views/developer/hooks/validate.ts";
 // components
 import Widget from "../../card/Widget.vue";
 import icon from "./components/icon.vue";
 import DragAndFollow from "./components/DragAndFollow.vue";
 import DroppableArea from "./components/DroppableArea.vue";
+
 const Set = defineAsyncComponent(() => import("./set/index.vue"));
 const ModelCard = defineAsyncComponent(() =>
   import("../../windowPanel/components/ModelCard.vue")
 );
 // pinia
-import { mapActions, mapWritableState } from "pinia";
-import { cardStore } from "../../../store/card.ts";
-import { taskStore } from "../../../apps/task/store";
+import {mapActions, mapWritableState} from "pinia";
+import {cardStore} from "../../../store/card.ts";
+import {taskStore} from "../../../apps/task/store";
 
-import { myIcons } from "../../../store/myIcons.ts";
+import {myIcons} from "../../../store/myIcons.ts";
 
-import { message } from "ant-design-vue";
+import {message} from "ant-design-vue";
 import _ from "lodash-es";
 import {
   defaultFolderData,
   defaultData,
 } from "../../../apps/folder/src/components/options";
 
-import { nanoid } from "nanoid";
-import { useFreeLayoutStore } from "../../desk/freeLayout/store";
-import { update } from "../../../apps/appCenter/src/views/developer/hooks/update";
-import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
-import { sizeTransform } from "./set/options";
+import {nanoid} from "nanoid";
+import {useFreeLayoutStore} from "../../desk/freeLayout/store";
+import {update} from "../../../apps/appCenter/src/views/developer/hooks/update";
+import {communityNavStore} from "../../bottomPanel/store/communityNavStore";
+import {sizeTransform} from "./set/options";
 
 export default {
   props: {
@@ -147,7 +148,8 @@ export default {
     },
     customData: {
       type: Object,
-      default: () => {},
+      default: () => {
+      },
     },
     desk: {
       type: Object,
@@ -397,6 +399,7 @@ export default {
     },
   },
   watch: {
+
     iconSelect(newV, oldV) {
       // 全局选择被放弃 则恢复状态
       if (this.isSelect && !newV && !this.dargFlag) {
@@ -439,7 +442,8 @@ export default {
       this.settingVisible = true;
     },
     // 开启框选
-    dragSelection() {},
+    dragSelection() {
+    },
     // ctrl + 点击
     handleCustomEvent(event) {
       console.log(this.customData.iconList[0]);
@@ -449,7 +453,7 @@ export default {
         this.moveIcon();
       } else {
         for (let i = 0; i < this.iconList.length; i++) {
-          const { iconIndex } = this.iconList[i];
+          const {iconIndex} = this.iconList[i];
           if (iconIndex === this.customIndex) {
             this.iconList.splice(i, 1);
           }
@@ -514,7 +518,7 @@ export default {
         {
           name: "myIcons",
           id: Date.now(),
-          customData: { iconList: [{ ...icon }] },
+          customData: {iconList: [{...icon}]},
         },
         this.desk
       );
@@ -537,7 +541,7 @@ export default {
       let state = false; // 初始化状态
       // 遍历全局数据并拦截重复的数据
       this.iconList.forEach((item) => {
-        const { iconIndex } = item;
+        const {iconIndex} = item;
         if (iconIndex === this.customIndex) state = true;
       });
       if (state) {
@@ -561,13 +565,13 @@ export default {
       //   return message.error("你还未移动任何图标组件");
       // 遍历全局数组并添加
       this.iconList.forEach((item) => {
-        const { iconRef, iconIndex, ...icon } = item;
+        const {iconRef, iconIndex, ...icon} = item;
         // 拦截重复的数据
         if (iconIndex !== undefined && iconIndex === this.customIndex) {
           this.iconState = false; // 关闭该图标状态 本次拖拽锁住无法添加
           return;
         }
-        this.customData.iconList.push({ ...icon });
+        this.customData.iconList.push({...icon});
 
         // this.$bus.emit("reset");
       });
@@ -639,14 +643,15 @@ export default {
     },
     // 适配新版保存图标
     closeSet() {
-      if(this.edit.type=='action'){
-        this.edit.value=[...this.edit.actions]
+      if (this.edit.type == 'action') {
+        this.edit.value = [...this.edit.actions]
       }
       this.customData.iconList[this.index] = {
         ...this.edit,
         open: {
           type: this.edit.type,
           value: this.edit.value,
+          home: this.edit.open.home
         },
       };
       this.customData.customSize = sizeTransform[this.edit.size];

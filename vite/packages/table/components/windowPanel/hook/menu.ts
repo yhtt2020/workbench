@@ -97,7 +97,7 @@ export default {
     async newOpenApp(item, e) {
       const { type, value } = item;
       // 处理是否最后执行统一的打开函数
-      let isRunApp = true; 
+      let isRunApp = true;
       // 自定义定位
       let custom = false;
       // 首先处理与 type 相关的
@@ -169,10 +169,10 @@ export default {
         this.resetElementPosition();
         this.appsVisible = false
       }
-      
+
       if(!isRunApp) return
       // 统一的打开函数
-      const rs = await startApp(type, value, this.$router);
+      const rs = await startApp(type, value, this.$router,item);
       if (!rs) {
         message.error({
           content: `打开「${item.name}」失败`,
