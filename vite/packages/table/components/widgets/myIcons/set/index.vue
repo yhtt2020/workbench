@@ -30,7 +30,6 @@
         <template v-if="['systemApp','lightApp','coolApp'].includes(edit.open.type) ">
           <xt-option-box>
             <xt-text class="mb-3" center> 当前图标为「系统功能」类型。</xt-text>
-            {{ edit.open }}}
           </xt-option-box>
           <SelectHome v-if="edit.open.value === 'home'" :editItem="edit.open"></SelectHome>
         </template>
