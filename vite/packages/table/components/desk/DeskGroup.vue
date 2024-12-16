@@ -194,7 +194,7 @@
       <xt-task id="D0001" no="1" @cb="clickDesk">
         <!-- tabs   -->
         <div class="panel s-bg">
-          <div v-if="showTabs" class="flex flex-row tabs">
+          <div v-if="showTabs" class="flex flex-row tabs sort-tabs">
             <!--      <div @click="setCurrentDeskId('0')" :class="{'tab-active':currentDeskId==='0'}" class="pr-3 home game-tab game-bg">-->
             <!--        <icon class="icon" style="font-size: 22px;" icon="desktop"></icon>-->
             <!--        主桌面-->
@@ -564,6 +564,7 @@ import NewGuidePage from '../../page/app/grade/NewGuidePage.vue'
 import ExtraMenu from '../../components/windowPanel/components/ExtraMenu.vue'
 import { localCache } from '../../js/axios/serverCache'
 import { EMPTY_DESK } from '../../js/const/default'
+import Sortable from "sortablejs";
 
 export default {
   name: 'DeskGroup',
@@ -728,6 +729,11 @@ export default {
     }
   },
   mounted () {
+    const el = document.querySelector(".sort-tabs");
+    new Sortable(el, {
+      group: "sortableTabs",
+      onEnd: this.onSortDesks, // 拖拽结束时触发的回调函数
+    });
     this.$bus.on('M0104', () => {
       this.currentAddTab.name = 'custom'
       this.addDeskVisible = true
@@ -900,6 +906,26 @@ export default {
     ...mapActions(marketStore, ['getRecommend']),
     ...mapActions(useFreeLayoutStore, ['clearFreeLayout']),
     ...mapActions(useDeskStore, ['addMenu']),
+    //重新排序
+    onSortDesks(evt){
+      let element = document.querySelector(".sort-tabs");
+      let newIndex = evt.newIndex,
+        oldIndex = evt.oldIndex;
+      let newItem = element.children[newIndex];
+      let oldItem = element.children[oldIndex];
+      element.removeChild(newItem);
+      if (newIndex > oldIndex) {
+        element.insertBefore(newItem, oldItem);
+      } else {
+        element.insertBefore(newItem, oldItem.nextSibling);
+      }
+      //let cloneTemp = [...this.deskList]; // 将原数据进行复制
+      let temp = this.deskList[evt.oldIndex]; // 获取旧的下标
+      this.deskList.splice(evt.oldIndex, 1); // 移除旧的下标
+      this.deskList.splice(evt.newIndex, 0, temp); // 将旧的下标进行替换
+      // 将原有列表进行更新
+      //this.deskList=cloneTemp
+    },
     clickDesk () {
       this.step = -1
       this.taskID = this.taskTmp
