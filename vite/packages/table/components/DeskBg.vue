@@ -77,7 +77,7 @@ export default defineComponent({
 <template>
   <!-- 独立壁纸 -->
   <template v-if="independentBg">
-    <div class="fixed top-0 left-0 right-0 bottom-0 video-container">
+    <div class="fixed bg-image top-0 left-0 right-0 bottom-0 video-container">
       <!-- 纯图片 -->
       <img
         v-if="independentBg.mode === 'img' && independentBg.imgValue !== ''"
@@ -105,6 +105,7 @@ export default defineComponent({
       </video>
       <div v-else class="w-full h-full"></div>
     </div>
+    <div class="fixed inset-0 background-img-blur-light" style="z-index: -1"></div><!--这个不加，则无法实现背景毛玻璃-->
   </template>
   <template v-else>
     <div class="fixed inset-0 video-container " v-if="backgroundImage.runpath">
