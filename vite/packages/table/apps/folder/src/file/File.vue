@@ -304,10 +304,12 @@ const fileDisabled = (item) => {
 
 // 保存数据
 const save = (edit) => {
+  console.log('文件处保存',edit)
   const data = useIconConversionFile(edit);
   data.useCount = currentItem.value.useCount;
   data.id = currentItem.value.id;
   data.type = iconStore.edit.type;
+  data.open=iconStore.edit.open
   data.value = iconStore.edit.value;
   emits("updateFile", data);
 };

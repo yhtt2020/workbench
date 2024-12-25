@@ -184,7 +184,7 @@ const props = defineProps({
     default: "999",
   },
 });
-const arr = ["internal", "default", "thinksky", "mob"];
+const arr = [ "default","internal", "thinksky", "mob"];
 const res = arr.includes(form.value.open.type);
 form.value.type = form.value.open.type;
 

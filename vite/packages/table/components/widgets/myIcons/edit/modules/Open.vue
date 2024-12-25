@@ -75,7 +75,7 @@ export default {
     clear() {
       this.edit.linkValue = "";
       this.edit.link = "";
-      this.edit.open = { value: "", type: "internal" };
+      this.edit.open = { value: "", type: "default" };
     },
     leaveInput() {
       if (this.edit.src.length === 0) {

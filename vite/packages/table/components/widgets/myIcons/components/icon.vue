@@ -229,7 +229,7 @@ export default {
       };
     },
     newOpenApp(TYPE, VALUE) {
-      switch (this.open.type) {
+      switch (this.type) {
         // 默认浏览器
         case "default":
           browser.openInSystem(this.open.value);
@@ -282,7 +282,7 @@ export default {
     startApp,
     // 单图标点击
     async iconClick(event) {
-      console.log('新版')
+      console.log('新版',event,'this',this)
       if (event.ctrlKey && event.button === 0) {
         this.$emit("customEvent");
         return;
@@ -294,14 +294,14 @@ export default {
       }
 
       if (this.newIcon) {
-        this.startApp(this.open.type, this.open.value, this.$router,this.open);
+        this.startApp(this.type, this.open.value, this.$router,this.open);
       } else if (this.open !== undefined && this.open.value !== "") {
         if (this.open.type === "card") {
           this.$emit("openCard");
           return;
         }
         // this.newOpenApp();
-        this.startApp(this.open.type, this.open.value, this.$router,this.open);
+        this.startApp(this.type, this.open.value, this.$router,this.open);
       } else if (this.link !== "") {
         // 其他应用
         this.openApp(this.linkValue);

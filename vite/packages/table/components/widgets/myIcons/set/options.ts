@@ -35,13 +35,13 @@ export const attributeOptions = [
   // },
   {
     type: "slot",
-    slot: "mode",
+    slot: "type",
     border: true,
   },
   {
     type: "children",
     flag: "link",
-    flagKey: "mode",
+    flagKey: "type",
     children: [
       {
         type: "input",
@@ -54,7 +54,7 @@ export const attributeOptions = [
       },
       {
         type: "drop",
-        dropKey: "type",
+        dropKey: "mode",
         list: [
           {
             icon: "mingcute:windows-line",
@@ -87,7 +87,7 @@ export const attributeOptions = [
   {
     type: "children",
     flag: "action",
-    flagKey: "mode",
+    flagKey: "type",
     children: [
       {
         type: "info",
@@ -103,7 +103,7 @@ export const attributeOptions = [
   {
     type: "children",
     flag:'app',
-    flagKey: "mode",
+    flagKey: "type",
     children: [
       {
         type: "slot",

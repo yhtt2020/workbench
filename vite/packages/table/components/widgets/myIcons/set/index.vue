@@ -40,20 +40,20 @@
             <template #custom>
               <div @click="openLocalApp()">
                 <xt-option-input
-                  v-model:input="edit.value"
+                  v-model:input="edit.open.value"
                   readonly
-                  v-if="edit.value"
+                  v-if="edit.open.value"
                 />
               </div>
-              <div v-show="!edit.value">
+              <div v-show="!edit.open.value">
                 <LocalApp ref="localApp" @onLocalApp="updateApp"/>
               </div>
             </template>
-            <template #mode>
+            <template #type>
               <!--此处为自定义表单部分              -->
               <xt-option-tab
-                v-model="mode"
-                :list="modeList"
+                v-model="type"
+                :list="typeList"
                 circle
                 style="height: 40px"
               />
@@ -120,7 +120,7 @@ const {proxy} = getCurrentInstance();
 const showUpload = () => {
   iconRef.value.showUpload()
 }
-const modeList = computed(() => {
+const typeList = computed(() => {
   let res = [
     {
       name: "网站链接",
@@ -151,17 +151,18 @@ const props = defineProps({
     default: "888",
   },
 });
-const arr = ["internal", "default", "thinksky", "mob"];
+const arr = ["default", "internal", "thinksky", "mob"];
 
 
 onMounted(() => {
-  edit.value.type = edit.value.open.type;
+  //edit.value.type = edit.value.open.type;
   let tabMap = {
     'tableApp': 'app',
     'default': 'link'
   }
-  edit.value["mode"] = tabMap[edit.value.open.type] || edit.value.open.type;
-  mode.value = edit.value['mode'] || 'link'
+  edit.value['type']=edit.value['type']||'link'
+  edit.value['mode']=edit.value['open']['mode']//因为存储在根节点上了，所以开始的时候要提取到上级
+  type.value = edit.value['type'] || 'link'
   edit.value["value"] = edit.value.open.value;
   if (!edit.value["defaultIcon"]) {
     edit.value["defaultIcon"] = edit.value.src;
@@ -197,21 +198,23 @@ const TabList = [
  * 更新本地返回的应用数据
  */
 const updateApp = (data) => {
+  console.log('修改了app',data)
   edit.value = {
     ...edit.value,
     titleValue: data.name,
     value: data.value,
-    type: data.type,
+    type: 'app',
     src: data.icon,
   };
+  edit.value.open.value=data.value;
 };
 
-const mode = ref(edit.value.mode);
+const type = ref(edit.value.mode);
 /**
  * watch 类型切换清空数据
  */
 watch(
-  () => mode.value,
+  () => type.value,
   (newVal, oldVal) => {
     if (!oldVal) return
     console.log("newVal,oldVal :>> ", newVal, oldVal);
@@ -219,32 +222,36 @@ watch(
       okText: "切换",
 
       ok: () => {
-        edit.value.value = "";
+        type.value = newVal;
         if (newVal == "link") {
-          edit.value.mode = "link";
-          edit.value.open.type = 'link'
-          edit.value.type = "default";
+          edit.value.open.mode = "default";
+          edit.value.value=''
+          edit.value.open.value=''
         }
         if (newVal === "app") {
-          edit.value.mode = "app";
-          edit.value.open.type = 'app'
+          edit.value.open.mode = "app";
+          edit.value.value=''
+          edit.value.open.value=''
           edit.value.src =
             "https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn";
         }
         if (newVal === "action") {
-          edit.value.mode = "action";
-          edit.value.open.type = "action";
-          edit.value.open.value = 'action'
-          edit.value.type = 'action'
+          edit.value.open.mode = "action";
+          edit.value.value=''
+          edit.value.open.value=''
           edit.value.actions = []
         }
+        edit.value.type=newVal//同步编辑体
       },
       no: () => {
-        edit.value.mode = oldVal;
-        mode.value = oldVal;
+        edit.value.type = oldVal;
+        type.value = oldVal;
       },
       type: "warning",
     });
+  },
+  {
+    immediate: false
   }
 )
 onBeforeUnmount(() => {
@@ -254,7 +261,7 @@ onBeforeUnmount(() => {
 watch(
   () => edit.value.value,
   (newV, oldV) => {
-    if (newV && edit.value.mode == "link") {
+    if (newV && edit.value.type == "link") {
       edit.value.src = getHostAddress(edit.value.value) + "/favicon.ico";
       edit.value.open.value = newV;
     }
@@ -263,15 +270,16 @@ watch(
 
 // 监听图标打开方式
 watch(
-  () => edit.value.type,
+  () => edit.value.mode,
   (newV, oldV) => {
-    edit.value.open.type = newV;
-    console.log(newV, edit.value.open.type);
+    edit.value.open.mode = newV;
+    console.log('更新mode',newV, edit.value.open.mode);
   }
 );
 watch(
   () => edit.value.open.home,
   (newV, oldV) => {
+    if(!newV) return
     edit.value.titleValue = newV.name
   },
   {
@@ -290,11 +298,12 @@ const refreshIcon = () => {
  * 保存数据
  */
 const save = () => {
-  console.log(" edit.value :>> ", edit.value);
-  emits("save", {value: edit.value, home: edit.value.open.home});
+
+  edit.value.type=type.value
+  console.log("save edit.value :>> ", edit.value);
+  emits("save", {value: edit.value});
   // fileSetVisible
   message.success("保存成功");
-  visible.value = false;
 };
 
 const localApp = ref(null);

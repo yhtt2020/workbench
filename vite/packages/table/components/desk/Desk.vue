@@ -796,6 +796,7 @@ export default {
     useFileConversionIcon,
     useAddCard,
     addIcon(item, index) {
+      console.log('桌面添加图标',item)
       const file = this.useFileConversionIcon(item);
       // console.log(file,'<<<<<<<<<<<<')
       this.useAddCard("myIcons", {

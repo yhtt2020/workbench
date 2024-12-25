@@ -16,10 +16,11 @@ export const myIcons = defineStore("myIcons", {
       size: "mini", // 组件大小
       link: "", // 选择类型
       linkValue: "", // 旧版打开
+      type: "link",
       open: {
         // 新版打开
         value: "", // 具体参数
-        type: "internal", // 打开类型
+        mode: "default", // 打开模式 link模式下生效
       },
       isTitle: true, // 图标名称状态
       titleValue: "", // 图标名称

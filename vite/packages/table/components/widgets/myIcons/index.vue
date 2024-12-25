@@ -85,7 +85,7 @@
     v-if="settingVisible"
     v-model="settingVisible"
     :index="1000"
-    @save="closeSet"
+    @save="saveAndClose"
   ></Set>
   <!-- 卡片弹窗 -->
   <ModelCard
@@ -642,19 +642,23 @@ export default {
       this.menuVisible = true;
     },
     // 适配新版保存图标
-    closeSet() {
-      if (this.edit.type == 'action') {
-        this.edit.value = [...this.edit.actions]
+    saveAndClose(saveData) {
+      console.log('编辑时保存',saveData)
+      let {value,home}=saveData
+      if (value.type == 'action') {
+        this.edit.value = [...value.actions]
       }
       this.customData.iconList[this.index] = {
-        ...this.edit,
+        ...value,
         open: {
-          type: this.edit.type,
-          value: this.edit.value,
-          home: this.edit.open.home
+          type: value.type,//写一个副本到open上，方便快速判断
+          value: value.open.value,
+          mode: value.open.mode,
+          home: value.open.home,
+          actions:value.actions,
         },
       };
-      this.customData.customSize = sizeTransform[this.edit.size];
+      this.customData.customSize = sizeTransform[value.size];
       this.settingVisible = false;
     },
   },

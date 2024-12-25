@@ -116,9 +116,30 @@ async function runApp(uri) {
  * @param data 额外提供的完整参数
  */
 export const startApp = async (type, value, router?,data?) => {
+  console.log('start>>type=',type,'value=',value,'router=',router,'data=',data)
   if (type === "" || value === "") {
     console.warn("startApp :>> type or value 不能为空");
   }
+  if(['default','internal','thinksky','mob'].includes(type)){
+    //兼容老的link模式
+    data.mode=type
+    type='link'
+
+  }
+
+  if(typeof type==='undefined'){
+    //兼容老数据
+    if(data.mode==='link'){
+      type='link'
+      data.mode=data.type
+      value=data.value
+    }else{
+      type=data.type
+      value=data.value
+    }
+
+  }
+
   switch (type) {
     case "ttapp":
       const ttappStore:any = useTTAppStore();
@@ -128,24 +149,28 @@ export const startApp = async (type, value, router?,data?) => {
     case "fixed":
       openFixedApp[value]();
       break;
-    // 默认浏览器
-    case "default":
-      browser.openInSystem(value);
-      break;
-    // 嵌入浏览器
-    case "internal":
-      browser.openInTable(value, {});
-      break;
-    // 想天浏览器
-    case "thinksky":
-      browser.openInInner(value);
-      break;
-    case "mob":
-      browser.openInMobMod(value, {
-        partition: "persist:webcontent",
-        newName: "手机模式",
-      });
-      break;
+    case "link":
+      switch (data.mode){
+        // 默认浏览器
+        case "default":
+          browser.openInSystem(value);
+          break;
+        // 嵌入浏览器
+        case "internal":
+          browser.openInTable(value, {});
+          break;
+        // 想天浏览器
+        case "thinksky":
+          browser.openInInner(value);
+          break;
+        case "mob":
+          browser.openInMobMod(value, {
+            partition: "persist:webcontent",
+            newName: "手机模式",
+          });
+          break;
+      }
+      break
     // 轻应用
     case "lightApp":
       // let isObject = typeof value == 'object'
@@ -168,6 +193,7 @@ export const startApp = async (type, value, router?,data?) => {
       useAppStore.openApp(info);
       break;
     // 本地应用
+    case 'app':
     case "tableApp":
       return await runApp(value);
       //window.$models.win32.openPath(require("path").normalize(value));
@@ -202,7 +228,7 @@ export const startApp = async (type, value, router?,data?) => {
       let success = []
       let failure = []
       let unknown = []
-      let actions =value
+      let actions =data.actions
       if (actions) {
         for (const action of actions) {
           let handler = new ActionHandler(action)

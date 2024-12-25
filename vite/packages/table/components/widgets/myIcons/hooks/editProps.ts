@@ -21,6 +21,7 @@ export default {
       type: String,
       default: imgStateList[0].value,
     },
+    type:{type:String},
     imgShape: { default: "square" },
     isBackground: { type: Boolean },
     backgroundColor: { type: String, default: "" },

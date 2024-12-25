@@ -68,6 +68,7 @@ export const useIconConversionFile = (data) => {
     iconShape: data.imgShape,
     mode: data.mode || "app",
     size: data.size,
+    open:data.open,
 
   };
   return file;

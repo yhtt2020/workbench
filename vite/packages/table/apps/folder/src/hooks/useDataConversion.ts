@@ -27,10 +27,14 @@ const isTrueSize = (data) => {
 }
 
 export const useFileConversionIcon = (data) => {
+  //桌面转换图标
   const icon = {
     model: "file",
     size: (data.size && isTrueSize(data.size)) ? data.size ||  "mini" : "mini",
+    type:data.type,
+    actions:data.actions,
     open: {
+      ...data.open,
       type: data.type,
       value: data.value,
     },

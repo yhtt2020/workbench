@@ -4,7 +4,10 @@ import { dateTimeStamp } from "../../../../components/widgets/clock/hooks/clockL
 export const defaultData = {
   useCount: 0, // 使用次数
   lastUseTime: "",
-  type: "",
+  type: "link", //link ,action ,app
+  open:{
+    mode:"default",
+  },
   value: "",
   icon: "",
   iconState: "cover",
