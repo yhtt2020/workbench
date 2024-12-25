@@ -307,7 +307,7 @@ export default [
         component: BrowserMain,
         children: [
           {
-            path: "",
+            path: "/:url?",
             name: "browser",
             component: BrowserIndex,
           },

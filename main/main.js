@@ -75,9 +75,8 @@ async function ready() {
 
       await baseApi.init()
       baseApi.axios('/app/open/usageStats/cumulativeTime', options, 'post').catch(e => {
-        console.warn('上传在线时长失败', e)
       }).then((rs) => {
-        //console.log('提交在线时长成功',rs)
+        //在线时长
       })
     } catch (e) {
       console.warn('上传在线时间意外错误', e)
