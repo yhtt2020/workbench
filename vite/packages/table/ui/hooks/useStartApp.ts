@@ -117,14 +117,25 @@ async function runApp(uri) {
  */
 export const startApp = async (type, value, router?,data?) => {
   console.log('start>>type=',type,'value=',value,'router=',router,'data=',data)
+  /*由于新的数据格式采用
+  {
+    type:'link',
+    open:{
+      mode:""
+      value:""}
+    value:""
+   }
+
+   新格式，老的只能通过判断来兼容，兼容完成后，转换为新的格式。
+   后续如果改造编辑机制，这边可能还需要再次优化
+   */
   if (type === "" || value === "") {
     console.warn("startApp :>> type or value 不能为空");
   }
-  if(['default','internal','thinksky','mob'].includes(type)){
+  if(['default','internal','thinksky','mob'].includes(type)||['default','internal','thinksky','mob'].includes(data.type)){
     //兼容老的link模式
-    data.mode=type
+    data.mode=type||data.type
     type='link'
-
   }
 
   if(typeof type==='undefined'){
