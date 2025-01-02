@@ -2,12 +2,12 @@
   <div class="relative flex h-full">
     <div class="w-32">
       <div class="overflow-y-auto xt-container" :style="heightStyle">
-        <div v-for="(item, index) in webBtn" @click="handleChange(index)"
+        <div v-for="(item, index) in navTypes" @click="handleChange(index)"
           class="flex items-center justify-center h-12 mr-2 cursor-pointer rounded-xl"
           style="flex: 0 0 auto ;width: 120px;" :class="{
             'xt-bg-2': index === selectIndex,
           }">
-          {{ item.label }}
+          {{ item.title }}
         </div>
       </div>
     </div>
@@ -22,7 +22,7 @@ import { getNavList } from "../api/api";
 import syncSelected from "../hooks/syncSelected";
 import cache from "../../../../components/card/hooks/cache";
 import { scrollable } from "../hooks/scrollable";
-
+import navDb from '../../../../js/lib/navDb'
 export default {
   inject: ["height"],
   mixins: [syncSelected],
@@ -40,73 +40,7 @@ export default {
   },
   data() {
     return {
-      webBtn: [
-        {
-          label: "设计工具",
-          name: "design",
-          checked: true,
-        },
-        {
-          label: "即时通讯",
-          name: "message",
-          checked: false,
-        },
-        {
-          label: "文档表单",
-          name: "docx",
-          checked: false,
-        },
-        {
-          label: "常用邮箱",
-          name: "email",
-          checked: false,
-        },
-        {
-          label: "资讯门户",
-          name: "information",
-          checked: false,
-        },
-        {
-          label: "效率工具",
-          name: "effect",
-          checked: false,
-        },
-        {
-          label: "媒体运营",
-          name: "media",
-          checked: false,
-        },
-        {
-          label: "SAAS服务",
-          name: "saas",
-          checked: false,
-        },
-        {
-          label: "程序开发",
-          name: "code",
-          checked: false,
-        },
-        {
-          label: "休闲娱乐",
-          name: "game",
-          checked: false,
-        },
-        {
-          label: "学习成长",
-          name: "learning",
-          checked: false,
-        },
-        {
-          label: "企业采购",
-          name: "copurchase",
-          checked: false,
-        },
-        {
-          label: "企业信息",
-          name: "coinfo",
-          checked: false,
-        },
-      ],
+      navTypes:[],
       appList: {},
       selectIndex: 0,
       selectName: "",
@@ -116,6 +50,9 @@ export default {
     scrollable,
   },
   async mounted() {
+    this.navTypes=await navDb.getNavTypesTree()
+    console.log('获取到的nav类型',this.navTypes)
+
     this.getData(this.selectIndex);
   },
   computed: {

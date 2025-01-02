@@ -147,6 +147,12 @@ export default {
     },
     {
       type: 'systemApp',
+      icon: '/logo/nav.svg',
+      name: '网址导航',
+      event: 'siteNav',
+    },
+    {
+      type: 'systemApp',
       icon: '/logo/app.svg',
       name: '应用中心',
       event: 'apps',
@@ -229,6 +235,12 @@ export default {
           value: 'note'
         },
       ]
+    },
+    {
+      type: 'systemApp',
+      icon: '/logo/calendar.svg',
+      name: '日历',
+      event: 'calendar',
     },
     {
       type: 'systemApp',

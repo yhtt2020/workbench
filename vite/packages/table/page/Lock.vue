@@ -1,6 +1,7 @@
 <template>
   <div class=" fixed inset-0 " style="z-index:1" v-if="singleLively">
-    <video class="fullscreen-video" playsinline="" autoplay="" muted="" loop="" ref="backgroundVideo">
+    <video class="fullscreen-video"
+           playsinline autoplay muted loop ref="backgroundVideo">
       <source :src="videoPath" type="video/mp4" id="bgVid">
     </video>
   </div>
@@ -308,19 +309,19 @@ export default {
           this.myPapers.map(el => {
            if (this.fileImageExtension(el)) {
             LockArr.push({'src-mp4': el.srcProtocol,media: 'video', poster: el.path, controls: false,});
-           } 
+           }
            else {
             LockArr.push({  src: el.path })
            }
           })
           // 处理视频播放
           if (LockArr.length === 1) {
-            if (LockArr[0].media === 'video') {  
-              this.singleLively = true  
+            if (LockArr[0].media === 'video') {
+              this.singleLively = true
               this.playing = LockArr
               return
             }
-          } 
+          }
           else {  this.singleLively = false }
           window.Spotlight.show(LockArr, this.config)
           break;
@@ -380,7 +381,7 @@ export default {
             console.log('报错',err);
           })
           break;
-        // 精选壁纸 
+        // 精选壁纸
         case 'recommend':
           selectWallPaper.forEach((item)=>{
             LockArr.push({src:item.fullPath,path:item.thumbPath})
@@ -392,7 +393,7 @@ export default {
            this.playActive()
           break;
       }
-      
+
       // if (this.settings.wallSource === 'my') {
       //   // 我的收藏
       //   if (this.myPapers.length === 0) {

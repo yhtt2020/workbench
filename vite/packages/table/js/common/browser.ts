@@ -60,9 +60,10 @@ const browser={
   },
   openInMobMod(url:string,options:{partition:string,newName:string}){
     ipc.send('enableEmulation',{
+      partition:'persist:webcontent',
+      newName:'手机模式',
+      ...options,
       url: url,
-      partition: options.partition,
-      newName:options.newName
     })
   }
 }

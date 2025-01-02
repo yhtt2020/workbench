@@ -1,10 +1,10 @@
 <template>
     <div class="flex flex-wrap" :style="{ gap: gap + 'px' }">
-        <SelectIcon 
-            v-for="(item, index) in list" 
-            :key="index" 
-            :item="item" 
-            :info="info"
+        <SelectIcon
+            v-for="(item, index) in list"
+            :key="index"
+            :item="item"
+            :info="item.summary||info"
             @clickRightListItem="clickItem" />
     </div>
 </template>

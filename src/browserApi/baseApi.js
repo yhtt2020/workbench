@@ -20,6 +20,7 @@ const baseApi={
   app:require('./app'),//app
   mouse:require('./mouse'),//鼠标
   ttapp:require('./ttapp'),//app
+  SqlDb:require('./sqlDb'),//sql数据库
 
 }
 window.baseApi=baseApi

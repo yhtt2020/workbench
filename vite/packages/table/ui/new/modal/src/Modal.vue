@@ -42,7 +42,7 @@
           <nav class="h-full">
             <slot name="nav"></slot>
           </nav>
-          <div class="flex flex-col flex-1 w-full">
+          <div class="flex flex-col w-full h-full">
             <!-- 头部 -->
             <slot name="header">
               <header
@@ -135,7 +135,7 @@
             <!-- 内容区 -->
             <main
               ref="scrollbar"
-              class="flex-1 h-full overflow-hidden"
+              class="flex-1 h-0 overflow-hidden"
               :class="mainClass"
             >
               <slot>

@@ -371,6 +371,12 @@ export const openSysApp = (value,router, data) => {
     case "my":
       useAppModal("galleryModalApp").openApp();
       break;
+    case "siteNav":
+      useAppModal("siteNav").openApp();
+      break;
+    case "calendar":
+      useAppModal("calendar").openApp();
+      break;
     case 'apps':
       // useMit.emit('openAppCenter')
       // 跳转到新版应用中心

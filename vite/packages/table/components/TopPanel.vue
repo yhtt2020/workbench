@@ -58,7 +58,7 @@
 
     <div
       class="absolute top-0 right-0 xt-bg rounded-bl-xl h-9 no-drag"
-      style="z-index: 10000;"
+      style="z-index: 100;"
       v-if="showWindowController && $usePlat('client')"
       id="windowController" >
       <WindowController></WindowController>

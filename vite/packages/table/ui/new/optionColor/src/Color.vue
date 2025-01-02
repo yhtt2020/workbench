@@ -73,6 +73,8 @@ const props = withDefaults(defineProps<colorProps>(), {
     color8: " linear-gradient(135deg, #EEA8A8 0%, #33B4DA 100%)",
     color9: "  linear-gradient(135deg, #EEA8A8 0%, #B633DA 100%)",
     color10: " linear-gradient(135deg, #A8EEA8 0%, #3354DA 100%)",
+    color11: 'linear-gradient(to right, rgb(0, 0, 0), rgb(67, 67, 67))',
+    color12:'linear-gradient(to right, rgb(118, 184, 82), rgb(141, 194, 111))',
   },
   isLinear: true,
   colorNum: 6,

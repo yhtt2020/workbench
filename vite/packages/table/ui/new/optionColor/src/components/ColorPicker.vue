@@ -1,21 +1,21 @@
 <template>
     <!-- ref="tippyRef" -->
-    <tippy 
+    <tippy
         :zIndex="(9999999 + 10)"
-        ref="tippyRef" 
-        trigger="click" 
-        placement="right" 
-        :interactive="true" 
-        :appendTo="body" 
+        ref="tippyRef"
+        trigger="click"
+        placement="right"
+        :interactive="true"
+        :appendTo="body"
         :arrow="false">
-        <xt-button 
-            :w="40" 
-            :h="40" 
+        <xt-button
+            :w="40"
+            :h="40"
             class="xt-bg"
             icon="fluent:more-horizontal-16-regular">
         </xt-button>
         <template #content>
-            <div class="w-[315px] rounded-xl shadow p-4 -mt-2 -mr-3 -ml-3 -mb-2 xt-modal">
+            <div class="w-[385px] rounded-xl shadow p-4 -mt-2 -mr-3 -ml-3 -mb-2 xt-modal">
                 <div class="flex justify-between mb-4">
                     <div class="text-base xt-text-2">推荐颜色</div>
                     <!-- <xt-button :w="24" :h="24"> -->
@@ -29,15 +29,15 @@
                             v-for="(item, index) in Object.keys(props.defaultList).length" @click="chooseDf(item)">
                             <xt-new-icon v-show="color == props.defaultList[`${'color' + item}`]" icon="ri:checkbox-circle-fill" size="20"></xt-new-icon>
                         </div>
-                        
+
                         <div class="w-[40px] h-[40px] pointer">
-                           <img src="/img/bg.png" class="w-[40px] h-[40px] absolute" style="object-fit: cover;z-index: 999;pointer-events: none;"> 
-                           <XtBaseColor 
-                                v-model:data="defaultColor" 
+                           <img src="/img/bg.png" class="w-[40px] h-[40px] absolute" style="object-fit: cover;z-index: 999;pointer-events: none;">
+                           <XtBaseColor
+                                v-model:data="defaultColor"
                                 @update:data="updateBackground">
                             </XtBaseColor>
                         </div>
-                        
+
                     </div>
                 </div>
 
@@ -114,6 +114,8 @@ const props = withDefaults(defineProps<colorPicker>(), {
         color8: ' linear-gradient(135deg, #EEA8A8 0%, #33B4DA 100%)',
         color9: '  linear-gradient(135deg, #EEA8A8 0%, #B633DA 100%)',
         color10: ' linear-gradient(135deg, #A8EEA8 0%, #3354DA 100%)',
+        color11: 'linear-gradient(to right, rgb(0, 0, 0), rgb(67, 67, 67))',
+        color12:'linear-gradient(to right, rgb(118, 184, 82), rgb(141, 194, 111))',
     },
     isLinear: true,
 
@@ -126,7 +128,7 @@ const body = computed(() => {
 })
 /**
  * 默认色
- * @param item 
+ * @param item
  */
 const chooseDf = (item) => {
     if (colorIndex.value === item) {

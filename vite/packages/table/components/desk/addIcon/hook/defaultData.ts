@@ -66,7 +66,7 @@ export const apps=[
     '.deb',
 ]
 
-export const webMenus=[
+export const navTypes=[
     {
         name:'新闻资讯',
         tag:'information'

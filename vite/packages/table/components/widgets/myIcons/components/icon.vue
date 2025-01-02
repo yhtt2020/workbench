@@ -147,10 +147,12 @@ export default {
       return h;
     },
     isIcon(){
-      return this.src.includes('icon_select/icon/')
+      if(!this.src) return true
+      return this.src?.includes('icon_select/icon/')
     },
     isEmoji(){
-      return this.src.includes('icon_select/emoji/')
+      if(!this.src) return true
+      return this.src?.includes('icon_select/emoji/')
     },
     isImg(){
       return this.isIfy==='select' && !this.isIcon && !this.isEmoji

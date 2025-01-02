@@ -11,7 +11,7 @@
     }"
   >
     <slot name="prefix" v-if="iconPosition == 'prefix'">
-      <xt-new-icon v-if="icon" :icon="icon" :size="iconSize"/>
+      <xt-new-icon v-if="icon" :icon="icon" :size="iconSize"/>&nbsp;
       <xt-ify-icon v-if="ifyIcon" :icon="ifyIcon" :size="iconSize"/>
     </slot>
     <span>

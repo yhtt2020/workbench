@@ -24,6 +24,18 @@ export const runList = [
     ...defaultData,
   },
   {
+    name: "siteNav",
+    cname: "网址导航",
+    icon: "/logo/nav.svg",
+    ...defaultData,
+  },
+  {
+    name: "calendar",
+    cname: "日历",
+    icon: "/logo/calendar.svg",
+    ...defaultData,
+  },
+  {
     name: "note",
     cname: "便签",
     // icon: "/logo/note.svg",

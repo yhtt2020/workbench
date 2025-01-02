@@ -10,7 +10,7 @@
       @input="handleInput"
       @keydown.enter.exact.prevent="handleEnter"
       @focus="handleFocus"
-
+      :allow-clear="allowClear"
       @blur="handleBlur"
       @change="handleChange"
       @keyup="handleKeyUp"
@@ -41,6 +41,10 @@ export default {
     };
   },
   props: {
+    allowClear:{
+      default: false,
+      type: Boolean,
+    },
     readonly: {
       default: false,
     },

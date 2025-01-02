@@ -2,13 +2,10 @@ const axios = require('axios')
 const fs = require('fs')
 const config = {
   expireTime: 24 * 60 * 60, // 默认缓存有效期为24小时
-  cacheExts: [
-    'js',
-    'jpg', 'jpeg', 'svg', 'png'
-  ]
+  cacheExts: ['js', 'jpg', 'jpeg', 'svg', 'png']
 }
 let el = {
-  error (error) {
+  error(error) {
     console.warn(error)
   }
 }
@@ -24,9 +21,7 @@ if (typeof window !== 'undefined') {
 }
 const cachePath = userDataPath + '/localCache'
 const localCacheManager = {
-  cachePath: cachePath,
-  tmpPath: cachePath + '/tmp',
-  urlToFilePath (url) {
+  cachePath: cachePath, tmpPath: cachePath + '/tmp', urlToFilePath(url) {
     try {
       const ext = localCacheManager.getUrlExt(url)
       const downloadDir = localCacheManager.cachePath + '/' + ext
@@ -37,23 +32,23 @@ const localCacheManager = {
     } catch (e) {
       el.error(e)
     }
-  },
-  /**
+  }, /**
    * 获取一个url的后缀名
    * @param url
    * @returns {*}
    */
-  getUrlExt (url) {
+  getUrlExt(url) {
     const urlSpliced = url.split('.')
     return urlSpliced[urlSpliced.length - 1]
-  },
-  /**
+  }, /**
    * 无缓存下载文件，即时更新文件到本地
    */
-  async getWithoutCache (url) {
+  async getWithoutCache(url) {
     try {
       const ext = localCacheManager.getUrlExt(url)
-      if (config.cacheExts.indexOf(ext) === -1) { return }
+      if (config.cacheExts.indexOf(ext) === -1) {
+        return
+      }
       const downloadDir = localCacheManager.cachePath + '/' + ext
       localCacheManager.prepareDir(downloadDir)
       const fileName = localCacheManager.getHash(url) + '.' + ext
@@ -67,17 +62,18 @@ const localCacheManager = {
     } catch (e) {
       el.error(e)
     }
-  },
-  /**
+  }, /**
    * 获取一个url地址上的文件，使用缓存方式，会判断文件是否存在，如果存在，则下载到缓存文件夹，并返回本地地址
    * 默认要求是必须在cacheExts配置中的，否则不做缓存，防止因为部分格式为被识别导致意外错误，如需缓存不存在的ext，请在cacheExt中添加特殊的类型
    * @param url 文件的url地址
    * @param expireTime 过期实际，默认为config设置的时间
    */
-  async get (url, expireTime = config.expireTime) {
+  async get(url, expireTime = config.expireTime) {
     try {
       const ext = localCacheManager.getUrlExt(url)
-      if (config.cacheExts.indexOf(ext) === -1) { return }
+      if (config.cacheExts.indexOf(ext) === -1) {
+        return
+      }
       const downloadDir = localCacheManager.cachePath + '/' + ext
       localCacheManager.prepareDir(downloadDir)
       const fileName = localCacheManager.getHash(url) + '.' + ext
@@ -98,45 +94,39 @@ const localCacheManager = {
     } catch (e) {
       el.error(e)
     }
-  },
-  /**
+  }, /**
    * 如果不存在目录，则自动创建
    * @param dir
    */
-  prepareDir (dir = localCacheManager.tmpPath) {
+  prepareDir(dir = localCacheManager.tmpPath) {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir + '/', {
         recursive: true
       })
     }
-  },
-  getFileMd5 (path) {
+  }, getFileMd5(path) {
 
-  },
-  /**
+  }, /**
    * 获取一个文本的hash
    * @param text
    * @returns {string}
    */
-  getHash (text) {
+  getHash(text) {
     const crypto = require('crypto')
     const shasum = crypto.createHash('sha1')
     shasum.update(text)
     return shasum.digest('hex')
-  },
-  /**
+  }, /**
    * 从网络的地址下载一个文件保存到本地
    * @param url
    * @param path
    * @returns {Promise<void>}
    */
-  async fetchUrl (url, path = localCacheManager.tmpPath) {
+  async fetchUrl(url, path = localCacheManager.tmpPath) {
     // 直接下载到本地，不考虑缓存
 
-    const { data } = await axios({
-      url: url,
-      method: 'get',
-      responseType: 'arraybuffer'
+    const {data} = await axios({
+      url: url, method: 'get', responseType: 'arraybuffer'
     })
     try {
       await fs.promises.writeFile(path, data, 'binary')
@@ -176,7 +166,7 @@ const localCacheManager = {
    * @param url
    * @returns {boolean}
    */
-  clearCache (url) {
+  clearCache(url) {
     const filePath = localCacheManager.urlToFilePath(url)
     if (fs.existsSync(filePath)) {
       fs.rmSync(filePath)

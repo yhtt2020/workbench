@@ -72,6 +72,8 @@ import WorkDesk from "../page/work/Desk.vue";
 /*便签*/
 import Note from "../apps/note/index.vue";
 import Income from "../apps/income/index.vue";
+import Calendar from '../apps/calendar/calendar.vue'
+import SiteNav from '../apps/siteNav/siteNav.vue'
 /**聊天团队模式开始**/
 import ChatIndex from "../apps/chat/page/home/ChatIndex.vue";
 import Chat from "../apps/chat/page/home/ChatApp.vue";
@@ -116,6 +118,8 @@ export default [
       note: Note,
       clipboard: Clipboard,
       income: Income,
+      calendar: Calendar,
+      siteNav: SiteNav,
       galleryModalApp:GalleryIndex
     },
 
@@ -148,6 +152,16 @@ export default [
           tab1: "work",
           tab2: "income",
         },
+      },
+      {
+        path: "/calendar",
+        name: "calendar",
+        component: Calendar,
+      },
+      {
+        path: "/siteNav",
+        name: "siteNav",
+        component: SiteNav,
       },
       {
         path: "/ai/:value?",

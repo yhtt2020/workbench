@@ -109,7 +109,7 @@ export default defineComponent({
   </template>
   <template v-else>
     <div class="fixed inset-0 video-container " v-if="backgroundImage.runpath">
-      <video class="fullscreen-video" playsinline="" autoplay="" muted="" loop="" ref="backgroundVideo">
+      <video class="fullscreen-video" playsinline autoplay muted loop ref="backgroundVideo">
         <source :src="videoPath" type="video/mp4" id="bgVid">
       </video>
     </div>

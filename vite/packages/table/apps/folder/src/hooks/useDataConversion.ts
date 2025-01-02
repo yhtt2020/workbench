@@ -150,10 +150,9 @@ export const defaultIconData = {
 
 // 桌面链接转为导航栏图标
 export const useLinkConversionNav = (link)=>{
-  const file = {
+  const icon = {
     name:link.name || '链接',
     icon:link.icon !== null ? link.icon : '	https://a.apps.vip/icons/iconSelect/emoji/globe-showing-asia-australia.svg',
-    type:'default',
     value: link.value,
     mode:'link',
     isBg:false,
@@ -161,5 +160,5 @@ export const useLinkConversionNav = (link)=>{
     id:nanoid(6),
     linkIcon:false, //link.icon === null ? true : false
   }
-  return file
+  return icon
 }
