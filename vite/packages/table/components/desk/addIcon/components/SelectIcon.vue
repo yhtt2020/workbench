@@ -1,7 +1,11 @@
 <template>
-    <div @click="clickRightListItem(item)"
+    <div @click="clickRightListItem(item)" :class="{'selected':item.active}"
         class="relative flex flex-col items-center justify-center rounded-xl pointer"
         :style="[checked, { width: size + 'px', height: size + 'px'}]">
+
+       <div style="position:absolute;left: 10px;top: 10px;">
+          <xt-new-icon  v-if="item.active" icon="fluent:checkmark-starburst-16-filled" color="var(--active-bg)" :size="15"></xt-new-icon>
+       </div>
         <xt-button v-if="item.type === 'folder' && showFolder" w="48" h="22" radius="6" type="theme" style="font-size: 12px;"
             class="absolute z-50 top-2 left-2">
             图标组
@@ -18,7 +22,9 @@
                 </a-avatar>
             </div>
         </div>
-        <div class="pl-3 pr-3 mt-3 mb-2 text-base xt-text omit-1">{{ item.name }}</div>
+        <div class="pl-3 pr-3 mt-3 mb-2 text-base xt-text omit-1 flex" >
+          <div>
+            {{ item.name }}</div></div>
         <div class="pl-3 pr-3 text-sm text-center xt-text-2 omit-1">{{ msg }}</div>
         <div class="absolute top-2 right-2" v-if="isMultiple">
             <xt-button w="32" h="32" radius="8" class="xt-bg">
@@ -26,6 +32,7 @@
             </xt-button>
 
         </div>
+
     </div>
 </template>
 
@@ -52,7 +59,7 @@ const props = defineProps({
     showFolder:{
         type: Boolean,
         default: true
-    }  
+    }
 })
 const { item, info, size, isApp, showFolder } = toRefs(props)
 
@@ -114,6 +121,9 @@ watch(
 
 </script>
 <style lang='scss' scoped>
+.selected{
+  background: var(--third-bg)  !important;
+}
 .omit-1 {
     display: -webkit-box;
     -webkit-box-orient: vertical;

@@ -1,9 +1,9 @@
 import {getResPath, getResPathJoin} from "../common/exec";
-
-const _ = require('lodash')
 const dbPath = getResPathJoin('nav.db')
 const SqlDb = tsbApi.SqlDb
 const db = new SqlDb(dbPath)
+
+import {siteNavStore} from '../../apps/siteNav/siteNavStore'
 const navDb = {
   async getNavTypes() {
     return db.knex('navType').orderBy('order','desc')
@@ -33,18 +33,39 @@ const navDb = {
     return db.knex('navSite').where(map).orderBy('order','desc')
 
   },
-  searchNavByWords(words){
-    return db.knex('navSite').where('title','like', `%${words}%`).orWhere('url','like', `%${words}%`)
-      .orWhere('summary','like', `%${words}%`).orderBy('order','desc')
+  checkIsMy(site){
+    return siteNavStore().mySites.findIndex(item => {
+      return item.id === site.id
+    })>-1
   },
-  getNavsByTopId(topId){
-    return db.knex('navSite').where({'topId':topId}).orderBy('order','desc')
+  async searchNavByWords(words, isMy = false) {
+    let rs = await db.knex('navSite').where('title', 'like', `%${words}%`).orWhere('url', 'like', `%${words}%`)
+      .orWhere('summary', 'like', `%${words}%`).orderBy('order', 'desc')
+    return navDb.filterData(rs,isMy)
   },
-  getNavsBySecondId(secondId){
-    return db.knex('navSite').where({'typeId':secondId}).orWhere({'secondId':secondId}).orderBy('order','desc')
+  async getNavsByTopId(topId,isMy=false){
+    let rs =await db.knex('navSite').where({'topId':topId}).orderBy('order','desc')
+    return navDb.filterData(rs,isMy)
   },
-  getNavsByThirdId(thirdId){
-    return db.knex('navSite').where({'typeId':thirdId}).orderBy('order','desc')
+  filterData(data,isMy){
+    data.forEach(item => {
+      item.active=navDb.checkIsMy(item)
+    })
+    return data.filter(item=>{
+      if(!isMy){
+        item.active=navDb.checkIsMy(item)
+        return true
+      }
+      return navDb.checkIsMy(item)
+    })
+  },
+  async getNavsBySecondId(secondId,isMy=false){
+    let rs=await db.knex('navSite').where({'typeId':secondId}).orWhere({'secondId':secondId}).orderBy('order','desc')
+    return navDb.filterData(rs,isMy)
+  },
+  async getNavsByThirdId(thirdId,isMy=false){
+    let rs=await db.knex('navSite').where({'typeId':thirdId}).orderBy('order','desc')
+    return navDb.filterData(rs,isMy)
   }
 }
 export default navDb
