@@ -254,7 +254,13 @@ app.whenReady().then(async () => {
 
   let tableMod = settings.get('tableMod')
   if (tableMod === undefined || tableMod === 'table') {
-    callTable(1).then()//呼出工作台
+
+    let delay=settings.get('startDelay')||0
+    setTimeout(()=>{
+      callTable(1).then()//呼出工作台
+    },delay*1000)
+
+    //
   }
 
   // function registerSearch () {

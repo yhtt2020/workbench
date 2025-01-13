@@ -331,7 +331,7 @@ const convertNavToIcon = (list) => {
       "id": item.id,
       "name": item.title,
       "summary": item.summary || '网站',
-      "icon": cdnUrl('/nav_icon/' + item.logo),
+      "icon":item.logo? cdnUrl('/nav_icon/' + item.logo):'/logo/browser.svg',
       "url": item.url,
       info: item.summary || '',
       value: item.url,

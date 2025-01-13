@@ -72,6 +72,19 @@
       v-model:switch="isAutoRun"
     />
     <hr />
+    <div class="mb-4">启动延迟</div>
+    <div
+      class="rounded-xl text-sm p-3 xt-bg-t-2 mb-3"
+      style="color: var(--warning)"
+    >
+      单位秒。当您使用梯子的时候，防止因为工作台启动过早，网络未连接时出现壁纸和图标无法加载，从而导致系统功能异常。
+    </div>
+    <xt-option-input
+    v-model:input="appSettings.startDelay"
+    >
+
+    </xt-option-input>
+    <hr />
     <xt-option-info
       title="自动检测升级"
       info="检测到新版本时自动下载，并提示重启更新，如遇功能异常，请手动检测升级。"
@@ -133,7 +146,7 @@ import { appStore as useAppStore } from "../../../../store";
 import { useWidgetStore } from "../../../../components/card/store";
 import { browserList, rightMenuList, trayList,closeMethodList } from "./config";
 import { useAppModal } from "../../../../hooks";
-
+import {message} from'ant-design-vue'
 import ChooseScreen from "../../../../page/ChooseScreen.vue";
 import Zoom from "./Zoom.vue";
 
@@ -208,6 +221,19 @@ watch(
     await tsbApi.settings.set("trayOpen", value);
   }
 );
+watch(()=>appSettings.value.startDelay ,
+async (value) => {
+   let num= appSettings.value.startDelay=parseInt(value)
+  if (isNaN(num)){
+    message.error('延迟时间必须为数值')
+    appSettings.value.startDelay=0
+  }
+  if(appSettings.value.startDelay >600){
+    message.error('请勿设置为超过10分钟的时间，以免工作台长时间无法打开')
+    appSettings.value.startDelay=0
+  }
+  await tsbApi.settings.set("startDelay", appSettings.value.startDelay);
+})
 /**
  * 浏览器模式
  */
@@ -252,6 +278,10 @@ const hardware = ref(true);
 // 监听是否硬件加速
 
 onMounted(async () => {
+  console.log(appSettings.value.startDelay,'ddd')
+  if(appSettings.value.startDelay === undefined) {
+    appSettings.value.startDelay=0
+  }
   if (proxy.$usePlat()) return;
   // 获取窗口缩放
   // windowZoom.value = (await tsbApi.window.getZoomFactor()) * 100 || 100;
