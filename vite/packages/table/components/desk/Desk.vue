@@ -483,6 +483,7 @@ export default {
       "isFreeLayout",
       "previewFlag",
       "freeLayoutId",
+      'getFreeLayoutState'
     ]),
     ...mapWritableState(useFloatMenuStore, ["menus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
