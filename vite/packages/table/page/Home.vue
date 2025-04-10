@@ -107,7 +107,7 @@ import RenameScreen from "./app/screen/renameScreem.vue";
 import { isMain } from "../js/common/screenUtils";
 // 检查当前网络状态
 import { useNetwork } from "@vueuse/core";
-import { DESKS } from "../js/const/default";
+import { WEB_DEFAULT_DESKS,CLIENT_DEFAULT_DESKS } from "../js/const/default";
 const { isOnline } = useNetwork();
 
 let steamUser,
@@ -509,12 +509,31 @@ export default {
         this.initTask();
         // 初始化桌面
         if (usePlat("client")) {
-          this.addFreeLayoutDesk();
+          //this.addFreeLayoutDesk();
+          let desks = _.cloneDeep(CLIENT_DEFAULT_DESKS);
+          if(this.desks.length>1){
+            console.log('走到了初始化length>1流程')
+            this.desks = [...desks,this.desks[0]];
+          }else{
+            console.log('走到了初始化基础流程')
+            this.desks = desks;
+          }
+
+          // console.log('查看desk',this.desks[0]);
+          const initDesk = this.desks[0];
+          //this.currentDesk = this.desks[0];
+          this.currentDeskIndex = {
+            name: initDesk?.name,
+            id: initDesk?.id,
+          };
+          this.currentDeskId = initDesk?.id;
+          console.log(_.cloneDeep(this.desks), "修改后的desks");
+
           // 非web端打开缩放提示弹窗
           this.visibleScale = true;
         } else {
           //非客户端的初始化流程
-          let desks = _.cloneDeep(DESKS);
+          let desks = _.cloneDeep(WEB_DEFAULT_DESKS);
           if(this.desks.length>1){
             console.log('走到了初始化length>1流程')
             this.desks = [...desks,this.desks[0]];

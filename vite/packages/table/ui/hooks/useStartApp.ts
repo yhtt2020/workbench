@@ -132,8 +132,12 @@ export const startApp = async (type, value, router?,data?) => {
   if (type === "" || value === "") {
     console.warn("startApp :>> type or value 不能为空");
   }
-  if(['default','internal','thinksky','mob'].includes(type)||['default','internal','thinksky','mob'].includes(data.type)){
+
+  if(['default','internal','thinksky','mob'].includes(type)||['default','internal','thinksky','mob'].includes(data?.type)){
     //兼容老的link模式
+    if(!data){
+      data={}
+    }
     data.mode=type||data.type
     type='link'
   }
@@ -148,6 +152,9 @@ export const startApp = async (type, value, router?,data?) => {
       type=data.type
       value=data.value
     }
+    if( value ===''){
+      const ttapp=''
+    }
 
   }
 
@@ -161,7 +168,7 @@ export const startApp = async (type, value, router?,data?) => {
       openFixedApp[value]();
       break;
     case "link":
-      switch (data.mode){
+      switch (data?.mode){
         // 默认浏览器
         case "default":
           browser.openInSystem(value);
@@ -179,6 +186,9 @@ export const startApp = async (type, value, router?,data?) => {
             partition: "persist:webcontent",
             newName: "手机模式",
           });
+          break;
+        default:
+          browser.openInSystem(value);
           break;
       }
       break

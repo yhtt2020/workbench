@@ -428,7 +428,7 @@ const clickFile = (data) => {
     cardData.value = data
     return
   }
-  startApp(data.type, data.value, router);
+  startApp(data.type, data.value, router,data.open);
   emit("clickFile", data);
 };
 /**

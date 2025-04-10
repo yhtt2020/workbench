@@ -14,7 +14,8 @@ body{
 }
 .s-bg{
   background: var(--primary-bg);
-
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
   box-shadow: var(--suspensiondBackGroundBoxShadow,0px 0px 10px 0px rgba(0,0,0,0.5))
 }//suspension-background
 .s-text{

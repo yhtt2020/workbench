@@ -642,12 +642,14 @@ export default {
 
 <style lang="scss" scoped>
 .bottom-panel {
+
   :deep(.icon) {
     fill: var(--primary-text);
   }
 }
 
 .common-panel {
+
   margin-bottom: 0;
 }
 

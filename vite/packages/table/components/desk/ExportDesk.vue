@@ -49,12 +49,25 @@
               @click="delLabel(index)"
             ></Icon>
           </template>
-          <a-select-option
-            v-for="(item, index) in deskType"
-            :key="index"
-            :value="index"
-            >{{ item }}</a-select-option
-          >
+          <a-select-opt-group label="个人桌面">
+            <template v-for="(item, index) in exportDesksList">
+              <a-select-option
+                :title="item.name"
+                :value="item.id"
+                v-if="!item.communityNo"
+              >{{item.name}}</a-select-option>
+            </template>
+
+          </a-select-opt-group>
+          <a-select-opt-group label="社群桌面">
+            <template v-for="(item, index) in exportDesksList">
+            <a-select-option
+                             :title="item.name"
+                             :value="item.id"
+                             v-if="item.communityNo"
+            >{{item.name}}</a-select-option>
+            </template>
+          </a-select-opt-group>
         </a-select>
         <span class="title">桌面数据：</span>
         <div style="font-size: 14px" class="mt-2 mb-4 xt-text-2">
@@ -62,7 +75,7 @@
         </div>
         <RadioTab
           :navList="dataType"
-          v-model:selectType="defaultType"
+          v-model:selectType="exportType"
         ></RadioTab>
         <div class="mt-2 title">
           桌面显示尺寸：{{ displaySize.width }} * {{ displaySize.height }}
@@ -95,6 +108,7 @@ import { mapActions, mapWritableState } from "pinia";
 import { message } from "ant-design-vue";
 import { useFreeLayoutStore } from "./freeLayout/store";
 import { useDeskStore } from "./store";
+import {homeStore} from '../../store/home'
 export default {
   name: "ExportDesk",
   components: {
@@ -106,12 +120,12 @@ export default {
       selectFreeLayoutState: {},
       selectDesk: [""],
       dataType: [
-        { title: "保留数据", name: "data" },
-        { title: "不保留数据", name: "notData" },
+        { title: "保留敏感数据", name: "data" },
+        { title: "不保留敏感数据", name: "notData" },
       ],
-      defaultType: { title: "不保留数据", name: "notData" },
-      deskType: [],
-      desk: [0],
+      exportType: { title: "不保留敏感数据", name: "notData" },
+      exportDesksList: [],
+      desk: [],
       selectedDesk: [],
     };
   },
@@ -133,7 +147,9 @@ export default {
     ...mapWritableState(cardStore, [
       "settings",
       "countdownDay",
-      "currentDeskIndex",
+    ]),
+    ...mapWritableState(homeStore,[
+      'currentDeskIndex'
     ]),
     ...mapWritableState(useFreeLayoutStore, [
       "freeLayoutState",
@@ -174,7 +190,7 @@ export default {
         item.deskHeight = deskSize.height; //新版导出修正命名
         item.settings = settings;
         val.map((i) => {
-          if (index === i) {
+          if (item.id === i) {
             this.selectedDesk.push(item);
             // console.log(item)
           }
@@ -196,16 +212,17 @@ export default {
             item.customData.sortType = "work";
             delete item.customData.sortList;
             break;
-          case "myIcons":
-            item.customData.iconList[0].backgroundColor = "";
-            item.customData.iconList[0].backgroundIndex = 0;
-            item.customData.iconList[0].imgShape = "square";
-            item.customData.iconList[0].imgState = "cover";
-            item.customData.iconList[0].isBackground = false;
-            item.customData.iconList[0].isRadius = true;
-            item.customData.iconList[0].radius = 5;
-            item.customData.iconList[0].size = "mini";
-            break;
+          //不必要清理掉图标
+          // case "myIcons":
+          //   item.customData.iconList[0].backgroundColor = "";
+          //   item.customData.iconList[0].backgroundIndex = 0;
+          //   item.customData.iconList[0].imgShape = "square";
+          //   item.customData.iconList[0].imgState = "cover";
+          //   item.customData.iconList[0].isBackground = false;
+          //   item.customData.iconList[0].isRadius = true;
+          //   item.customData.iconList[0].radius = 5;
+          //   item.customData.iconList[0].size = "mini";
+          //   break;
         }
       });
     },
@@ -215,7 +232,7 @@ export default {
           this.selectFreeLayoutData[item.id] = this.freeLayoutData[item.id];
           this.selectFreeLayoutState[item.id] = this.freeLayoutState[item.id];
         }
-        if (this.defaultType.name === "notData") {
+        if (this.exportType.name === "notData") {
           this.setData(item);
         }
       });
@@ -272,31 +289,41 @@ export default {
   },
   mounted() {},
   watch: {
-    openModal(val) {
-      if (val) {
-        this.selectedDesk = [];
-        this.deskType = this.desks.map((item) => item.name);
-        this.defaultType = {
-          title: "不保留数据",
-          icon: "yuanquan",
-          name: "notData",
-        };
-        this.desks.map((item, index) => {
-          if (item.nanoid === this.currentDeskIndex?.name) {
-            this.desk = [index];
-            this.onChange([index]);
-          }
-        });
+    openModal:{
+      handler(val){
+        if (val) {
+          this.selectedDesk = [];
+          this.exportDesksList=[]
+          this.desks.forEach((item) => {
+            if(item.cards.length!==0){
+              this.exportDesksList.push(item)
+            }
+          });
+          this.exportType = {
+            title: "不保留敏感数据",
+            icon: "yuanquan",
+            name: "notData",
+          };
+          this.desks.map((item, index) => {
+            if (item.id === this.currentDeskIndex?.id) {
+              this.desk = [item.id];
+              this.onChange([item.id])
+            }
 
-        // if(desks[0].settings && desks[0].settings.enableZoom){
-        //   settings = item.settings
-        // }else{
-        //   console.log(this.settings)
-        //   settings = {...this.settings,enableZoom:true}
-        // }
-        // desks[0].settings = settings
-        // this.selectedDesk.push(desks[0])
-      }
+            console.log(item,'desk')
+          });
+
+          // if(desks[0].settings && desks[0].settings.enableZoom){
+          //   settings = item.settings
+          // }else{
+          //   console.log(this.settings)
+          //   settings = {...this.settings,enableZoom:true}
+          // }
+          // desks[0].settings = settings
+          // this.selectedDesk.push(desks[0])
+        }
+      },
+      immediate: true,
     },
   },
 };

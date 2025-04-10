@@ -74,7 +74,8 @@ export default {
           }
         }
       },
-      deep:true
+      deep:true,
+      immediate: true,
     },
   },
   mounted() {

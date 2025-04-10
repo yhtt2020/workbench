@@ -48,6 +48,7 @@ export const appStore = defineStore('appStore', {
     windowFullScreen: false,//窗口是否是全屏
 
     settings: {
+      startDelay:0,//启动延迟，单位秒
       showTopPanel: true,
       enableDev: false,//开发者模式
       transparent: false,//透明背景
@@ -101,7 +102,7 @@ export const appStore = defineStore('appStore', {
 
       /**用于社群导航是否第一次开启提示**/
       comNavVisible:true,
-      /**用于社群桌面和个人桌面的切换**/ 
+      /**用于社群桌面和个人桌面的切换**/
       isCommunity:true,
     },
 

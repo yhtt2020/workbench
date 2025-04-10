@@ -13,13 +13,13 @@
         <div class="w-[64px] h-[64px] rounded-xl  flex items-center justify-center">
             <div style="width: 64px; height:64px;border-radius: 8px;" v-if="item.type !== 'folder' || !showFolder"
                 class="flex items-center justify-center rounded-lg ">
-                <a-avatar :size="64" shape="square" :src="item.icon"></a-avatar>
+                <a-image :preview="false"   class="rounded-lg object-cover" style="width: 64px;height:64px" :size="64" shape="square" :src="item.icon"></a-image>
             </div>
             <div style="width: 64px; height:64px;border-radius: 8px;" v-else
                 class="relative flex items-center justify-center rounded-lg icon-img">
-                <a-avatar class="absolute flex-shrink-0" :size="64" shape="square" :src="i.icon"
+                <a-image :preview="false" class="absolute object-cover  flex-shrink-0 rounded-lg"  style="width: 64px;height:64px" :size="64"  :src="i.icon"
                     v-for="(i, index) in item.children.slice(0, 3)">
-                </a-avatar>
+                </a-image>
             </div>
         </div>
         <div class="pl-3 pr-3 mt-3 mb-2 text-base xt-text omit-1 flex" >

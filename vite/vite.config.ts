@@ -52,7 +52,7 @@ export default defineConfig({
   ],
   base: "/",
   build: {
-    //sourcemap:true,//不打包sourcemap
+    sourcemap:false,//不打包sourcemap
     rollupOptions: {
       input: inputs,
       output: {

@@ -20,7 +20,7 @@
     </template>
 
     <div class="line-title">使用习惯</div>
-    <div class="line" v-if="!$usePlat()">
+    <div class="line" v-if="$usePlat('client')">
       在系统任务栏显示窗口：
       <a-switch v-model:checked="settings.showInTaskBar"></a-switch>
     </div>
@@ -28,7 +28,7 @@
       <div class="line">
         <AutoRun/>
       </div>
-      <div class="line"  v-if="!$usePlat()">
+      <div class="line"  v-if="$usePlat('client')">
         双击托盘菜单默认打开：
         <a-radio-group v-model:value="trayOpen">
           <!-- 后期可删 -->

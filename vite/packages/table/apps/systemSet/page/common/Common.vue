@@ -77,7 +77,7 @@
       class="rounded-xl text-sm p-3 xt-bg-t-2 mb-3"
       style="color: var(--warning)"
     >
-      单位秒。当您使用梯子的时候，防止因为工作台启动过早，网络未连接时出现壁纸和图标无法加载，从而导致系统功能异常。
+      单位秒。当您使用梯子的时候，防止因为工作台启动过早，网络未连接时出现壁纸和图标无法加载，从而导致系统功能异常。仍可通过双击托盘菜单直接打开。
     </div>
     <xt-option-input
     v-model:input="appSettings.startDelay"
