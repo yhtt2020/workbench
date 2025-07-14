@@ -4,9 +4,12 @@
       <Search></Search>
     </div>
     <div
-      class="p-3 h-0 flex-1 flex-grow overflow-hidden overflow-y-auto xt-scrollbar no-drag"
+      class="p-3 h-0 flex-1 flex-grow overflow-hidden overflow-y-auto xt-scrollbar drag"
     >
-      <router-view></router-view>
+      <div class="no-drag h-full w-full">
+        <router-view ></router-view>
+      </div>
+
     </div>
   </div>
 </template>

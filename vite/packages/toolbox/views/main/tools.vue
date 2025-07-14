@@ -1,10 +1,10 @@
 <template>
-  <div class="flex flex-wrap">
+  <div class="flex flex-wrap drag h-full " style="align-content: start">
     <div
       v-for="tool in toolsList"
       :key="tool.route"
-      class="xt-text flex flex-col items-center justify-center m-1 cursor-pointer"
-      style="width: 100px; height: 100px"
+      class="xt-text flex  flex-col items-center justify-center m-1 cursor-pointer no-drag "
+      style="width: 100px; height: 100px;"
       @click="toolClick(tool)"
     >
       <img class="w-12 h-12 mb-2" :src="'/tools/' + tool.img + '.png'" alt="" />
@@ -73,4 +73,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+.drag{
+  -webkit-app-region: drag
+}
+</style>

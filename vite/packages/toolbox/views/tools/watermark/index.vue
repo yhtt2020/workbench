@@ -26,7 +26,7 @@ export default defineComponent({
       this.originBounds = bounds
       const newBounds={x:0,y:0,width:0,height:0}
       newBounds.width=1400
-      newBounds.height=800
+      newBounds.height=900
       newBounds.x= +(this.originBounds.x-(newBounds.width-this.originBounds.width)/2).toFixed(0)
       newBounds.y= +(this.originBounds.y-(newBounds.height-this.originBounds.height)/2).toFixed(0)
 

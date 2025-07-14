@@ -23,21 +23,37 @@
 
     <XtInput
       :focus="true"
-      v-model="search"
+      v-model="search" style="-webkit-app-region: no-drag;padding-top: 0"
       placeholder="试试输入、粘贴、拖放内容到此处"
       @enter="searchEnter()"
     >
-      <template #suffix v-if="search">
-        <XtIcon
+      <template #suffix >
+        <XtIcon v-if="search"
           @click="clear()"
-          type=""
           class="xt-text"
           icon="guanbi"
           w="24"
           h="24"
           size="24"
         ></XtIcon>
-      </template>
+        <template v-else>
+            <xt-new-icon v-if="autoHide"
+                    @click="setAutoHide(false)"
+                    icon="fluent:pin-16-regular"
+                    w="24"
+                    h="24"
+                    size="24"
+            ></xt-new-icon>
+            <xt-new-icon v-else
+                    @click="setAutoHide(true)"
+                    type=""
+                    icon="fluent:pin-16-filled"
+                    w="24"
+                    h="24"
+                    size="24"
+            ></xt-new-icon>
+          </template>
+        </template>
     </XtInput>
   </div>
 </template>
@@ -53,7 +69,7 @@ import { QRCodeGeneration } from "../../store/QRCodeGeneration";
 export default {
   mounted() {},
   computed: {
-    ...mapWritableState(main, ["useTool"]),
+    ...mapWritableState(main, ["useTool","autoHide"]),
     ...mapWritableState(calculator, ["computeList", "selectIndex"]),
     ...mapWritableState(translate, ["inputValue"]),
     ...mapWritableState(timeConversion, ["time", "timeStamp"]),
@@ -69,6 +85,9 @@ export default {
     ...mapActions(translate, ["startTranslation"]),
     ...mapActions(timeConversion, ["timeKeyup", "timeStampKeyup"]),
     ...mapActions(currencyExchange, ["fromCurrencyRate"]),
+    setAutoHide(flag=false){
+      this.autoHide=flag
+    },
     back() {
       this.$router.push("/");
       this.useTool = "";
