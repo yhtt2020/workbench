@@ -48,7 +48,7 @@ const webSource = ref();
 /** 用于判断是否属于web搜索源 */
 const isWebSource = computed(() => {
   const name = currentSource.value.name;
-  if (name === "工作台" || name === "文件" || name === "AI助手") {
+  if (name === "工作台内搜索" || name === "文件" || name === "AI助手") {
     return false;
   }
   return true;
@@ -76,7 +76,7 @@ const initCurrentSource = () => {
   }
 
   currentSource.value = source;
-  if (source.name == "工作台") {
+  if (source.name == "工作台内搜索") {
     sourceIndex.value = 0;
   } else if (source.name == "文件") {
     sourceIndex.value = 1;
@@ -287,6 +287,12 @@ useEventListener("keyup", tabEventUp);
                 size="24"
                 class="tt-no-bg"
               />
+              <xt-mix-icon
+                icon="fluent:caret-down-16-filled"
+                type="select"
+                size="24"
+                class="tt-no-bg"
+              />
             </div>
             <template #overlay>
               <div
@@ -342,7 +348,7 @@ useEventListener("keyup", tabEventUp);
       >
         <AISearch v-if="currentSource.name == 'AI助手'" ref="AIRef" />
         <SystemSearch
-          v-else-if="words && currentSource.name == '工作台'"
+          v-else-if="words && currentSource.name == '工作台内搜索'"
           ref="SystemRef"
         />
         <FileSearch v-else-if="words && currentSource.name == '文件'" />
@@ -352,35 +358,80 @@ useEventListener("keyup", tabEventUp);
           ref="webRef"
         />
         <HistorySearch v-else-if="!words && data.historyList.length > 0" />
+
+
+      </main>
+      <main v-else  class="mt-2">
+       <div class="p-4">
+         <div class="flex">
+           按下<div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">Tab</div>
+           或者点击图标：
+           <div class="ml-1">切换搜索方式</div>
+         </div>
+         <div class="flex gap-4 pt-2">
+           <div
+             v-for="item in tabSourceList"
+             class="xt-bg w-full h-10 flex items-center justify-between p-2 mb-2 text-sm hover:tt-theme-bg-2 cursor-pointer"
+             style="border-radius: 10px; z-index: 999999999999"
+             :class="[
+                    {
+                      'tt-theme-bg-2': currentSource.name == item.name,
+                    },
+                  ]"
+             @click="selectTabSource(item)"
+           >
+             <div class="flex items-center">
+               <xt-mix-icon
+                 size="24"
+                 class="mr-3"
+                 :icon="item.icon"
+                 type="select"
+               />
+               {{ item.name }}
+             </div>
+             <div class="tt-text-3 mr">
+               {{ item.type }}
+             </div>
+           </div>
+         </div>
+
+       </div>
+        <div class="p-4 pt-0 flex">
+          可按下<div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">Alt</div>+
+          <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">x</div>
+          唤起全局可用的超级工具箱，支持更多小工具
+        </div>
+
       </main>
       <footer
         class="h-10 tt-bg-2-t flex items-center justify-between p-3 pr-2 text-xs"
       >
         <div class="tt-text-3 flex h-8 items-center">
           <template v-if="!words && !data.historyList.length">
-            <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">Tab</div>
-            <div class="ml-1">切换搜索方式</div>
+
           </template>
           <template v-if="words || data.historyList.length > 0">
-            <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">
-              Ctrl
-            </div>
-            <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">1-9</div>
-            <div>快速打开候选项</div>
-            <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">
-              Ctrl
-            </div>
-            <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">Tab</div>
-            <div>切换打开方式</div>
-            <template v-if="isWebSource && words">
+
               <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">
-                Alt
+                Ctrl
               </div>
+              <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">1-9</div>
+              <div>快速打开候选项</div>
               <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">
-                1-9
+                Ctrl
               </div>
-              <div>切换搜索引擎</div>
-            </template>
+              <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">Tab</div>
+              <div>切换打开方式</div>
+              <template v-if="isWebSource && words">
+                <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">
+                  Alt
+                </div>
+                <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">
+                  1-9
+                </div>
+                <div>切换搜索引擎</div>
+               </template>
+
           </template>
         </div>
         <xt-mix-icon

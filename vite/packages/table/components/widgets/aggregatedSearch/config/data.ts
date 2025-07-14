@@ -83,7 +83,7 @@ export const openWithList = [
 
 export const defaultSourceList = [
   {
-    name: "工作台",
+    name: "工作台内搜索",
     icon: "/img/appLogo/tt.png",
     iconType: "select",
     searchUrl: "",

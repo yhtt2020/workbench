@@ -193,7 +193,7 @@ const openSystemApp = (obj, name) => {
     </div>
   </xt-scrollbar>
   <Scrollbar>
-    <div v-if="loading">加载中</div>
+    <div v-if="loading">搜索中……</div>
     <template v-else-if="searchList.length > 0" v-for="item in searchList">
       <div class="p-2.5 tt-text-3 w-full text-sm flex justify-between">
         <div>
