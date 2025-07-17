@@ -46,7 +46,7 @@
           >
             <span class="sort">{{ index + 1 }}</span>
             <div class="item">
-              <NewsItem :key="index" :newsMsgList="item" :copyNum="copyNum" />
+              <NewsItem :key="index" :newsMsgList="item" :copyNum="copyNum"/>
             </div>
             <!-- 添加分割线 -->
             <div class="divider" v-show="this.copyNum >= 8">
@@ -95,9 +95,9 @@
 <script>
 import Widget from "../../card/Widget.vue";
 import NewsItem from "./NewsItem.vue";
-import { mapWritableState, mapActions } from "pinia";
+import {mapWritableState, mapActions} from "pinia";
 import DataStatu from "../DataStatu.vue";
-import { newsStore } from "../../../store/news.ts";
+import {newsStore} from "../../../store/news.ts";
 import NewsCardDrawer from "./NewsCardDrawer.vue";
 import {
   LeftOutlined,
@@ -105,8 +105,9 @@ import {
   HolderOutlined,
   FileSearchOutlined,
 } from "@ant-design/icons-vue";
-import { Icon as newIcon } from "@iconify/vue";
-import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
+import {Icon as newIcon} from "@iconify/vue";
+import {communityNavStore} from "../../bottomPanel/store/communityNavStore";
+import showApi from "../../../js/axios/showApi";
 
 export default {
   name: "News",
@@ -117,7 +118,8 @@ export default {
     },
     customData: {
       type: Object,
-      default: () => {},
+      default: () => {
+      },
     },
     desk: {
       type: Object,
@@ -169,63 +171,7 @@ export default {
       ],
       currentIndex: 0,
       // '头条', '国内', '国际', '娱乐', '军事', '体育', '科技'
-      titleList: [
-        {
-          title: "头条",
-          tag: "top",
-          // id:0
-        },
-        {
-          title: "国内",
-          tag: "guonei",
-          // id:1
-        },
-        {
-          title: "国际",
-          tag: "guoji",
-          // id:2
-        },
-        {
-          title: "娱乐",
-          tag: "yule",
-          // id:3
-        },
-        {
-          title: "军事",
-          tag: "junshi",
-          // id:4
-        },
-        {
-          title: "体育",
-          tag: "tiyu",
-          // id:5
-        },
-        {
-          title: "科技",
-          tag: "keji",
-          // id:6
-        },
-        {
-          title: "财经",
-          tag: "caijing",
-          // id:7
-        },
-        {
-          title: "汽车",
-          tag: "qiche",
-          // id:8
-        },
-        {
-          title: "游戏",
-          tag: "youxi",
-          // id:9
-        },
-        {
-          title: "健康",
-          tag: "jiankang",
-          // id:10
-        },
-      ],
+      titleList: [],
       isLoading: false,
       pageToggle: true,
       settingsScroller: {
@@ -256,7 +202,6 @@ export default {
       this.currentIndex = index;
       this.customData.index = this.currentIndex;
       await this.getNewsData();
-      this.customData.newsList = this.newsMsgList;
     },
     setSortedList(arrList) {
       // 获取拖拽排序后数据
@@ -267,12 +212,39 @@ export default {
       let tag = this.showList[this.currentIndex].tag;
       this.customData.tag = tag;
       // console.log(this.customData.tag)
-      await this.getNewsMsg(this.customData.tag);
-      this.customData.newsList = this.newsMsgList;
+      let lsRs = await showApi.getNewsList(this.customData.tag);
+      if (lsRs.status) {
+        console.log(lsRs.data, '分页结果')
+        this.customData.newsList = lsRs.data.contentlist.map((item) => {
+          return {
+            title: item.title,
+            author_name: item.source,
+            thumbnail_pic_s: item.img,
+            url: item.link,
+            date: item.pubDate
+          }
+        })
+      }
+
       // console.log(this.customData.newList);
     },
-    refreshData() {
+    async refreshChannel() {
+      let newsChannel = await showApi.getNewsChannel()
+      let filtered = newsChannel.filter((item) => {
+        console.log('循环判断', item.name, ['军事焦点', '体育焦点'].includes(item.name))
+        return !['军事焦点', '体育焦点'].includes(item.name)
+      })
+      this.titleList = filtered.map(item => {
+        return {
+          title: item.name,
+          tag: item.channelId
+        }
+      })
+      console.log(this.titleList)
+    },
+    async refreshData() {
       this.refreshFlag = true;
+      await this.refreshChannel()
       this.getNewsData().then(() => {
         this.refreshFlag = false;
       });
@@ -286,7 +258,7 @@ export default {
         // 当卡片添加到导航栏时，阻止默认删除事件
         customDel: this.openWay === "nav" ? true : false,
         defaultData: {
-          customSize:  "2x4",
+          customSize: "2x4",
           _updateFlag: "24531",
         },
         disableEdit: this.isCommunityDesktop(this.desk),
@@ -349,24 +321,25 @@ export default {
       return {
         title: "新闻资讯",
         // ifyIcon:'fluent:news-16-regular',
-        showIcon:"/logo/news.svg",
-        refresh:{
+        showIcon: "/logo/news.svg",
+        refresh: {
           fn: this.refreshData,
           tip: "刷新",
           state: this.refreshFlag ? true : false,
         },
         leftHover: true,
-        leftHoverName:"点击切换",
+        leftHoverName: "点击切换",
         leftHoverIcon: "fluent:open-16-regular",
       }
     }
   },
   async mounted() {
+
+
     this.isLoading = true;
-    this.getNewsMsg(this.showList[this.currentIndex].tag).then(() => {
-      this.isLoading = false;
-    });
-    // await this.getNewsData()
+    await this.refreshChannel()
+    await this.getNewsData()
+    this.isLoading = false;
     if (this.customData.customSize == undefined) {
       this.customData.customSize = "2x4";
     }
