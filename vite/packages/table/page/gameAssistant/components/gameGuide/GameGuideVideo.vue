@@ -156,7 +156,7 @@ export default {
 
     // 查看bi站视频详情
     openUrl(url) {
-      browser.openInSystem(url);
+      browser.openInUserSelect(url);
     },
   },
 };
