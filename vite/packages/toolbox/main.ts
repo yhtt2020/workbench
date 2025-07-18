@@ -33,5 +33,4 @@ app.use(baseComponents).use(components);
 
 app.config.globalProperties.$cache = cache;
 app.config.globalProperties.$showApi = showApi;
-
 app.mount("#app");
