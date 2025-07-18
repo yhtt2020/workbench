@@ -115,3 +115,12 @@ const showApi = {
 }
 
 export default showApi;
+
+export const getExchangeRate = async ({fromCode,toCode,money}) => {
+  const res = await showApi.api('105-31',{
+    fromCode,
+    toCode,
+    money
+  })
+  return res
+}

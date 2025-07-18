@@ -12,9 +12,10 @@ import "../../public/css/styleSwitch/index.scss";
 // 注册基础组件
 import baseComponents from "../table/ui/libs/index";
 // 注册业务组件
-import components from "../table/ui/components/index";
+import components from "../table/ui/components/index.js";
 
 import cache from "../table/components/card/hooks/cache";
+import * as showApi from "../table/js/axios/showApi.js";
 
 // @ts-ignore
 const { tools } = window.$models;
@@ -31,5 +32,6 @@ app.use(Antd).use(router);
 app.use(baseComponents).use(components);
 
 app.config.globalProperties.$cache = cache;
+app.config.globalProperties.$showApi = showApi;
 
 app.mount("#app");

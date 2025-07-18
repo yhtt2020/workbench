@@ -5,7 +5,8 @@
       {{ selectToCurrency.name }}
     </div>
     <div class="my-3">
-      1 {{ selectToCurrency.name }} = {{ toRate }} {{ selectFromCurrency.name }}
+      1 {{ selectToCurrency.name }} = {{ (1 / rate)?.toFixed(2) }}
+      {{ selectFromCurrency.name }}
     </div>
 
     <div class="flex items-center h-12">
@@ -111,7 +112,6 @@
       </XtInput>
       <XtIcon :copy="toCurrency" icon="fuzhi" size="28" type=""></XtIcon>
     </div>
-
     <div class="xt-text-2 mt-2">{{ getDate() }} 数据仅供参考</div>
   </div>
 
@@ -131,11 +131,12 @@ export default {
     return {
       currencies,
       flag: false,
+      rate: 0,
     };
   },
   async mounted() {
     this.getCurrency(this.selectFromCurrency.id);
-    this.getCurrency(this.selectToCurrency.id);
+    // this.getCurrency(this.selectToCurrency.id);
   },
   watch: {
     async selectFromCurrency(newV) {
@@ -146,7 +147,6 @@ export default {
     async selectToCurrency(newV) {
       if (this.flag) return;
       await this.getCurrency(newV.id);
-      
       this.fromCurrencyRate();
     },
   },
@@ -157,12 +157,31 @@ export default {
       "toCurrency",
       "selectFromCurrency",
       "selectToCurrency",
-      "fromRate",
-      "toRate",
+      // "fromRate",
+      // "toRate",
     ]),
+    fromRate() {
+      if (this.rate == 0) {
+        return 0;
+      }
+      return (1 * this.rate).toFixed(2);
+    },
+    toRate() {
+      if (this.rate == 0) {
+        return 0;
+      }
+      return (1 / this.rate).toFixed(2);
+    },
   },
   methods: {
-    ...mapActions(currencyExchange, ["fromCurrencyRate", "toCurrencyRate"]),
+    fromCurrencyRate() {
+      const res = this.fromCurrency * this.rate;
+      this.toCurrency = res.toFixed(2);
+    },
+    toCurrencyRate() {
+      const res = this.toCurrency / this.rate;
+      this.fromCurrency = res.toFixed(2);
+    },
     getDate() {
       return dayjs().format("YYYY-MM-DD");
     },
@@ -181,6 +200,14 @@ export default {
       }, 1000);
     },
     async getCurrency(id) {
+      const { data } = await this.$showApi.getExchangeRate({
+        fromCode: this.selectFromCurrency.id,
+        toCode: this.selectToCurrency.id,
+        money: 1,
+      });
+      console.log("data", data);
+      this.rate = data.rate;
+      return;
       let currencyState = this.$cache.get("currencyState");
       if (!currencyState) {
         this.currencyRateList = [];
@@ -189,7 +216,6 @@ export default {
       if (!this.currencyRateList[id]) {
         let toUrl = `https://60s.viki.moe/ex-rates?c=` + id;
         let toRes = await axios.get(toUrl);
-        this.toCurrencyRateList = toRes.data.data;
         this.currencyRateList[id] = { ...toRes.data.data };
       }
     },
