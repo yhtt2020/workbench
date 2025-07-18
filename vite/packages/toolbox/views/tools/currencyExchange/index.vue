@@ -5,7 +5,7 @@
       {{ selectToCurrency.name }}
     </div>
     <div class="my-3">
-      1 {{ selectToCurrency.name }} = {{ (1 / rate)?.toFixed(2) }}
+      1 {{ selectToCurrency.name }} = {{ toRate }}
       {{ selectFromCurrency.name }}
     </div>
 
