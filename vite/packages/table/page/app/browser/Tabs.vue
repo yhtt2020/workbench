@@ -45,6 +45,9 @@ export default {
       this.runningTabs=[]
       this.currentTab= {}
 
+    },
+    goBack(){
+      this.$router.push({name:'browser'})
     }
   },
   mounted() {
@@ -55,7 +58,7 @@ export default {
 </script>
 
 <template>
-  <back-btn></back-btn>
+  <back-btn @click="goBack"></back-btn>
   <div style="position: relative;clear: both">
       <div style="display: inline-block;position: relative;float: right">
         <div @click.stop="closeAllTab()" class="close-btn big">
